@@ -79,6 +79,32 @@ npm run build:site
 
 The deployable output is written to `dist/site/`. The `tool-hub` app becomes the site root, and every other app is copied to `dist/site/<app-folder>/`.
 
+## Server Deployment
+
+On the server, clone the repository once and configure the Nginx site root to the generated `dist/site/` directory:
+
+```text
+/path/to/BG7LDB-Tool-Hub/dist/site
+```
+
+Then update and rebuild with one command:
+
+```bash
+./scripts/deploy.sh
+```
+
+If your Nginx panel requires copying files into a separate web root, use:
+
+```bash
+./scripts/deploy.sh --copy-to /www/wwwroot/tools.bg7ldb.top
+```
+
+If you also want the script to test and reload Nginx:
+
+```bash
+./scripts/deploy.sh --reload-nginx
+```
+
 ## Private Site Footer
 
 Footer HTML is injected from environment variables at dev/build time. The repository only tracks [.env.example](.env.example); real `.env` files stay local and are ignored by Git.
