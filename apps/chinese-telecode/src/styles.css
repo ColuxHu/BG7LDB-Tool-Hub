@@ -271,7 +271,7 @@ textarea {
   justify-content: space-between;
   gap: 20px;
   min-height: 118px;
-  padding: 20px 132px 22px 0;
+  padding: 20px 0 22px;
 }
 
 .masthead>div:first-child {
@@ -295,6 +295,7 @@ h2 {
 h1 {
   font-size: clamp(32px, 5vw, 62px);
   line-height: 1.06;
+  white-space: nowrap;
 }
 
 h2 {
@@ -725,19 +726,13 @@ h2 {
 
 .paper-foot {
   margin-top: 14px;
+  align-items: center;
+  flex-wrap: nowrap;
   line-height: 1.7;
 }
 
 .paper-foot span {
-  min-width: max-content;
-}
-
-@media (max-width: 520px) {
-  .paper-foot {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 2px;
-  }
+  min-width: 0;
 }
 
 @media (max-width: 860px) {
@@ -752,7 +747,7 @@ h2 {
 
   .masthead {
     min-height: 100px;
-    padding-right: 100px;
+    padding-right: 0;
   }
 
   .stamp {

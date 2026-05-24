@@ -1,5 +1,9 @@
 {
     "forward": {
+        " ": {
+            "kMainlandTelegraph": null,
+            "kTaiwanTelegraph": "9998"
+        },
         "㘾": {
             "kMainlandTelegraph": null,
             "kTaiwanTelegraph": "8249"
@@ -132130,25 +132134,25 @@
         ],
         "9992": [
             {
-                "char": "(起始着重号)",
+                "char": "\\起始着重号",
                 "type": "kMainlandTelegraph"
             }
         ],
         "9993": [
             {
-                "char": "(末尾着重号)",
+                "char": "\\末尾着重号",
                 "type": "kMainlandTelegraph"
             }
         ],
         "9994": [
             {
-                "char": "(起始专名号)",
+                "char": "\\起始专名号",
                 "type": "kMainlandTelegraph"
             }
         ],
         "9995": [
             {
-                "char": "(末尾专名号)",
+                "char": "\\末尾专名号",
                 "type": "kMainlandTelegraph"
             }
         ],
@@ -132161,6 +132165,12 @@
         "9997": [
             {
                 "char": "》",
+                "type": "kMainlandTelegraph"
+            }
+        ],
+        "9998": [
+            {
+                "char": "\\空格",
                 "type": "kMainlandTelegraph"
             }
         ],
