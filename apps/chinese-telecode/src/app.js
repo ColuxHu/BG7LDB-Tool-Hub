@@ -80,6 +80,7 @@ const els = {
   jumpToPaper: document.querySelector("#jumpToPaper"),
   quickJumps: document.querySelector("#quickJumps"),
   telegramPaper: document.querySelector("#telegramPaper"),
+  pasteClipboard: document.querySelector("#pasteClipboard"),
 };
 
 function todayLabel() {
@@ -794,6 +795,27 @@ async function copyPlainCodes() {
   }, 1200);
 }
 
+async function pasteFromClipboard() {
+  if (!navigator.clipboard || !els.pasteClipboard) {
+    setGlobalAlert("此环境不支持剪贴板访问，请手动粘贴。");
+    return;
+  }
+  try {
+    const text = await navigator.clipboard.readText();
+    if (text == null) return;
+    els.sourceText.value = text;
+    refresh();
+    const original = els.pasteClipboard.textContent;
+    els.pasteClipboard.textContent = "已粘贴";
+    window.setTimeout(() => {
+      els.pasteClipboard.textContent = original || "一键粘贴";
+    }, 1200);
+  } catch (err) {
+    console.error(err);
+    setGlobalAlert("粘贴失败：请允许访问剪贴板或手动粘贴。");
+  }
+}
+
 function drawExportCanvas() {
   const entries =
     state.mode === "encode"
@@ -999,6 +1021,9 @@ function bindEvents() {
     refresh();
   });
   els.copyCodes.addEventListener("click", copyPlainCodes);
+  if (els.pasteClipboard) {
+    els.pasteClipboard.addEventListener("click", pasteFromClipboard);
+  }
   els.exportImage.addEventListener("click", exportImage);
   els.clearAll.addEventListener("click", () => {
     els.sourceText.value = "";

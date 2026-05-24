@@ -1,146 +1,130 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="多版本中文电报码查询、译码与复古报文纸生成工具，兼容 kMainlandTelegraph 与 kTaiwanTelegraph。"
-    />
-    <title>中文电报码兼容译码台</title>
-    <link rel="stylesheet" href="./src/styles.css" />
-  </head>
-  <body>
-    <main class="app-shell">
-      <section class="workbench" aria-label="中文电报码兼容译码台">
-        <header class="masthead">
-          <div>
-            <p class="eyebrow">Unihan Telegraph Compatibility Desk</p>
-            <h1>中文电报码兼容译码台</h1>
-          </div>
-          <div class="stamp" aria-label="数据待加载">
-            <span id="loadStatus">装载中</span>
-          </div>
-        </header>
 
-        <div class="tool-grid">
-          <section class="panel input-panel">
-            <div class="panel-head">
-              <h2>报文录入</h2>
-              <div class="mode-tabs" role="tablist" aria-label="处理模式">
-                <button class="tab is-active" data-mode="encode" type="button">汉字转码</button>
-                <button class="tab" data-mode="decode" type="button">电码译字</button>
-              </div>
-            </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="多版本中文电报码查询、译码与复古报文纸生成工具，兼容 kMainlandTelegraph 与 kTaiwanTelegraph。" />
+  <title>中文电报码兼容译码台</title>
+  <link rel="stylesheet" href="./src/styles.css" />
+</head>
 
-            <div class="field-row">
-              <label class="field-label" for="sourceText">内容</label>
-              <select id="corpusSelect" class="corpus-select" aria-label="选择测试文档">
-                <option value="">选择测试文档</option>
-              </select>
-            </div>
-            <textarea id="sourceText" spellcheck="false" placeholder="输入中文，或切换到电码译字后输入 0001 0002 0003"></textarea>
-
-            <div class="controls">
-              <select id="strategy">
-                <option value="mainland-first">83 码优先，TW 码补位</option>
-                <option value="taiwan-first">TW 码优先，83 码补位</option>
-                <option value="mainland-only">仅 kMainlandTelegraph</option>
-                <option value="taiwan-only">仅 kTaiwanTelegraph</option>
-              </select>
-
-              <div class="han-conversion-control">
-                <button id="hanConversionToggle" class="han-conversion-button" type="button" aria-label="不转换">
-                  <img
-                    id="hanConversionIcon"
-                    class="han-conversion-icon"
-                    src="./public/assets/icons/han-conversion-none.svg"
-                    width="42"
-                    height="42"
-                    alt=""
-                    aria-hidden="true"
-                  />
-                </button>
-                <select id="hanConversion" hidden>
-                  <option value="none">不转换</option>
-                  <option value="s2t">简转繁</option>
-                  <option value="t2s">繁转简</option>
-                </select>
-              </div>
-
-              <div class="icon-toggle-control">
-                <button id="normalizeWidthToggle" class="icon-toggle-button" type="button" aria-label="不转换全半角">
-                  <img
-                    id="normalizeWidthIcon"
-                    class="icon-toggle-image"
-                    src="./public/assets/icons/width-normalize-none.svg"
-                    width="42"
-                    height="42"
-                    alt=""
-                    aria-hidden="true"
-                  />
-                </button>
-                <select id="normalizeWidth" hidden>
-                  <option value="none">不转换全半角</option>
-                  <option value="full">转为全角</option>
-                  <option value="half">转为半角</option>
-                </select>
-              </div>
-
-              <div class="variant-annotation-control">
-                <button id="markVariantsToggle" class="icon-toggle-button" type="button" aria-label="标注异码" aria-pressed="true">
-                  <img
-                    id="markVariantsIcon"
-                    class="icon-toggle-image"
-                    src="./public/assets/icons/variant-annotation-on.svg"
-                    width="42"
-                    height="42"
-                    alt=""
-                    aria-hidden="true"
-                  />
-                </button>
-                <input id="markVariants" type="checkbox" checked hidden />
-              </div>
-            </div>
-
-            <div class="actions">
-              <button id="copyCodes" class="primary" type="button">复制纯码</button>
-              <button id="exportImage" type="button">导出报文纸</button>
-              <button id="clearAll" type="button">清空</button>
-            </div>
-          </section>
-
-          <section class="panel result-panel">
-            <div class="panel-head">
-              <h2>译码结果</h2>
-              <output id="summary" class="summary">等待输入</output>
-            </div>
-            <div class="alert is-hidden" id="globalAlert" role="status"></div>
-            <div class="code-output" id="codeOutput" aria-live="polite"></div>
-            <div class="reverse-output" id="reverseOutput"></div>
-          </section>
+<body>
+  <main class="app-shell">
+    <section class="workbench" aria-label="中文电报码兼容译码台">
+      <header class="masthead">
+        <div>
+          <p class="eyebrow">Unihan Telegraph Compatibility Desk</p>
+          <h1>中文电报码兼容译码台</h1>
         </div>
+        <div class="stamp" aria-label="数据待加载">
+          <span id="loadStatus">装载中</span>
+        </div>
+      </header>
 
-        <section class="telegram-paper" id="telegramPaper" aria-label="复古报文纸预览">
-          <div class="paper-bar">
-            <span>中国电报报文纸</span>
-            <span>兼容校核联</span>
+      <div class="tool-grid">
+        <section class="panel input-panel">
+          <div class="panel-head">
+            <h2>报文录入</h2>
+            <div class="mode-tabs" role="tablist" aria-label="处理模式">
+              <button class="tab is-active" data-mode="encode" type="button">汉字转码</button>
+              <button class="tab" data-mode="decode" type="button">电码译字</button>
+            </div>
           </div>
-          <div class="quote-line">迅速 准确 保密 熟练</div>
-          <div class="paper-grid" id="paperGrid"></div>
-          <div class="paper-foot">
-            <span>译电员：识盈</span>
-            <span id="paperDate"></span>
+
+          <div class="field-row">
+            <label class="field-label" for="sourceText">内容</label>
+            <select id="corpusSelect" class="corpus-select" aria-label="选择测试文档">
+              <option value="">选择测试文档</option>
+            </select>
+          </div>
+          <textarea id="sourceText" spellcheck="false" placeholder="输入中文，或切换到电码译字后输入 0001 0002 0003"></textarea>
+
+          <div class="controls">
+            <select id="strategy">
+              <option value="mainland-first">83 码优先，TW 码补位</option>
+              <option value="taiwan-first">TW 码优先，83 码补位</option>
+              <option value="mainland-only">仅 kMainlandTelegraph</option>
+              <option value="taiwan-only">仅 kTaiwanTelegraph</option>
+            </select>
+
+            <div class="han-conversion-control">
+              <button id="hanConversionToggle" class="han-conversion-button" type="button" aria-label="不转换">
+                <img id="hanConversionIcon" class="han-conversion-icon"
+                  src="./public/assets/icons/han-conversion-none.svg" width="42" height="42" alt=""
+                  aria-hidden="true" />
+              </button>
+              <select id="hanConversion" hidden>
+                <option value="none">不转换</option>
+                <option value="s2t">简转繁</option>
+                <option value="t2s">繁转简</option>
+              </select>
+            </div>
+
+            <div class="icon-toggle-control">
+              <button id="normalizeWidthToggle" class="icon-toggle-button" type="button" aria-label="不转换全半角">
+                <img id="normalizeWidthIcon" class="icon-toggle-image"
+                  src="./public/assets/icons/width-normalize-none.svg" width="42" height="42" alt=""
+                  aria-hidden="true" />
+              </button>
+              <select id="normalizeWidth" hidden>
+                <option value="none">不转换全半角</option>
+                <option value="full">转为全角</option>
+                <option value="half">转为半角</option>
+              </select>
+            </div>
+
+            <div class="variant-annotation-control">
+              <button id="markVariantsToggle" class="icon-toggle-button" type="button" aria-label="标注异码"
+                aria-pressed="true">
+                <img id="markVariantsIcon" class="icon-toggle-image"
+                  src="./public/assets/icons/variant-annotation-on.svg" width="42" height="42" alt=""
+                  aria-hidden="true" />
+              </button>
+              <input id="markVariants" type="checkbox" checked hidden />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="pasteClipboard" type="button">一键粘贴</button>
+            <button id="copyCodes" class="primary" type="button">复制纯码</button>
+            <button id="exportImage" type="button">导出报文纸</button>
+            <button id="clearAll" type="button">清空</button>
           </div>
         </section>
-      </section>
-    </main>
-    <!-- SITE_FOOTER -->
-<div class="quick-jumps" id="quickJumps" aria-label="快速跳转">
-      <button class="jump-button" id="backToTop" type="button" aria-label="回到顶端">顶</button>
-      <button class="jump-button" id="jumpToPaper" type="button" aria-label="跳到中国电报报文纸开头">纸</button>
-    </div>
 
-    <script type="module" src="./src/app.js"></script>
-  </body>
+        <section class="panel result-panel">
+          <div class="panel-head">
+            <h2>译码结果</h2>
+            <output id="summary" class="summary">等待输入</output>
+          </div>
+          <div class="alert is-hidden" id="globalAlert" role="status"></div>
+          <div class="code-output" id="codeOutput" aria-live="polite"></div>
+          <div class="reverse-output" id="reverseOutput"></div>
+        </section>
+      </div>
+
+      <section class="telegram-paper" id="telegramPaper" aria-label="复古报文纸预览">
+        <div class="paper-bar">
+          <span>中国电报报文纸</span>
+          <span>兼容校核联</span>
+        </div>
+        <div class="quote-line">迅速 准确 保密 熟练</div>
+        <div class="paper-grid" id="paperGrid"></div>
+        <div class="paper-foot">
+          <span>译电员：识盈</span>
+          <span id="paperDate"></span>
+        </div>
+      </section>
+    </section>
+  </main>
+  <!-- SITE_FOOTER -->
+  <div class="quick-jumps" id="quickJumps" aria-label="快速跳转">
+    <button class="jump-button" id="backToTop" type="button" aria-label="回到顶端">顶</button>
+    <button class="jump-button" id="jumpToPaper" type="button" aria-label="跳到中国电报报文纸开头">纸</button>
+  </div>
+
+  <script type="module" src="./src/app.js"></script>
+</body>
+
 </html>
