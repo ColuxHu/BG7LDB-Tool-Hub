@@ -105,6 +105,149 @@ If you also want the script to test and reload Nginx:
 ./scripts/deploy.sh --reload-nginx
 ```
 
+## Maintenance Workflow
+
+### Update an Existing App
+
+1. Edit files in the app directory:
+
+```text
+apps/<app-folder>/
+```
+
+For example:
+
+```text
+apps/chinese-telecode/
+```
+
+2. Preview the full local site:
+
+```bash
+npm run dev
+```
+
+3. Open the app path:
+
+```text
+http://127.0.0.1:5173/<app-folder>/
+```
+
+For the tool hub itself, open:
+
+```text
+http://127.0.0.1:5173/
+```
+
+4. Build the deployable site:
+
+```bash
+npm run build:site
+```
+
+5. Commit and push:
+
+```bash
+git status
+git add .
+git commit -m "fix: update <app-name>"
+git push
+```
+
+6. Deploy on the server:
+
+```bash
+cd /opt/BG7LDB-Tool-Hub
+./scripts/deploy.sh --skip-install
+```
+
+Use `./scripts/deploy.sh` without `--skip-install` when dependencies changed.
+
+### Add a New App
+
+1. Create a new folder under `apps/`:
+
+```text
+apps/<new-app>/
+```
+
+2. Add at least an `index.html` file:
+
+```text
+apps/<new-app>/index.html
+```
+
+3. Add optional assets next to it:
+
+```text
+apps/<new-app>/styles.css
+apps/<new-app>/script.js
+```
+
+4. Add `package.json` for a simple static app:
+
+```json
+{
+  "name": "@bg7ldb/<new-app>",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5176",
+    "build": "node ../../scripts/copy-static-app.mjs . index.html styles.css script.js",
+    "preview": "vite preview --host 127.0.0.1 --port 4176"
+  }
+}
+```
+
+If the app has more static files or folders, append them to the `build` command.
+
+5. Add a card to the tool hub:
+
+```text
+apps/tool-hub/index.html
+```
+
+Example:
+
+```html
+<a href="/morse-code/" class="tool-card">
+  <h3>摩斯电码转换</h3>
+  <p>支持文本与摩斯电码互转。</p>
+  <span class="status online">ONLINE</span>
+</a>
+```
+
+6. Preview locally:
+
+```bash
+npm run dev
+```
+
+The new app is mapped automatically:
+
+```text
+http://127.0.0.1:5173/<new-app>/
+```
+
+7. Build, commit, push, and deploy:
+
+```bash
+npm run build:site
+git add .
+git commit -m "feat: add <new-app>"
+git push
+```
+
+On the server:
+
+```bash
+cd /opt/BG7LDB-Tool-Hub
+./scripts/deploy.sh
+```
+
+The deploy script updates Git, installs dependencies, builds `dist/site`, and preserves the `dist/site` directory itself so Docker bind mounts stay valid.
+
 ## Private Site Footer
 
 Footer HTML is injected from environment variables at dev/build time. The repository only tracks [.env.example](.env.example); real `.env` files stay local and are ignored by Git.
