@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="不转换">
+  <defs>
+    <style>
+      @font-face {
+        font-family: "Source Han Serif SC Icon";
+        src: url("../fonts/source-han-serif/SourceHanSerifCN-Bold.otf") format("opentype");
+        font-weight: 700;
+      }
+
+      @font-face {
+        font-family: "Source Han Serif TW Icon";
+        src: url("../fonts/source-han-serif/SourceHanSerifTW-Bold.otf") format("opentype");
+        font-weight: 700;
+      }
+
+      .glyph {
+        fill: #b2211f;
+        font-size: 760px;
+        font-weight: 700;
+        dominant-baseline: central;
+        text-anchor: middle;
+      }
+    </style>
+    <clipPath id="simplified-side">
+      <polygon points="0,0 807.6,0 216.4,1024 0,1024" />
+    </clipPath>
+    <clipPath id="traditional-side">
+      <polygon points="807.6,0 1024,0 1024,1024 216.4,1024" />
+    </clipPath>
+    <mask id="diagonal-gap">
+      <rect width="1024" height="1024" fill="#fff" />
+      <line x1="216.4" y1="1024" x2="807.6" y2="0" stroke="#000" stroke-width="64" stroke-linecap="square" />
+    </mask>
+  </defs>
+  <g>
+    <text class="glyph" clip-path="url(#simplified-side)" mask="url(#diagonal-gap)" x="412" y="460" font-family="Source Han Serif SC Icon, serif">汉</text>
+    <text class="glyph" clip-path="url(#traditional-side)" mask="url(#diagonal-gap)" x="612" y="564" font-family="Source Han Serif TW Icon, serif">漢</text>
+  </g>
+</svg>

@@ -1,0 +1,187 @@
+:root {
+    --primary-color: #000000;
+    --accent-color: #FF0000;
+    --bg-color: #f4f4f5;
+    --card-bg: #ffffff;
+    --text-main: #333;
+    --text-dim: #999;
+}
+
+body {
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+header {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin: 0;
+    letter-spacing: 2px;
+    border-bottom: 4px solid var(--primary-color);
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+header p {
+    margin-top: 15px;
+    color: var(--text-dim);
+    font-size: 1.1rem;
+}
+
+.container {
+    max-width: 900px;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.tool-card {
+    background: var(--card-bg);
+    border: 2px solid var(--primary-color);
+    padding: 25px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.tool-card:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 4px 4px 0px var(--primary-color);
+}
+
+.tool-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+}
+
+.tool-card h3::before {
+    content: "█";
+    color: var(--accent-color);
+    margin-right: 10px;
+    font-size: 1rem;
+}
+
+.tool-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #666;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.status {
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border: 1px solid var(--primary-color);
+    align-self: flex-start;
+}
+
+.status.online {
+    background: #000;
+    color: #fff;
+}
+
+.status.dev {
+    background: #eee;
+    color: #999;
+    border-color: #ddd;
+}
+
+.tool-card.disabled {
+    cursor: default;
+}
+
+.tool-card.disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.tool-card.placeholder {
+    border-style: dashed;
+    border-color: #ccc;
+    background: transparent;
+}
+
+.tool-card.placeholder h3,
+.tool-card.placeholder p {
+    color: #ccc;
+}
+
+footer {
+    width: 100%;
+    padding: 40px 20px;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    font-size: 12px;
+    color: var(--text-dim);
+    background: #fff;
+}
+
+footer a {
+    color: var(--text-dim);
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.beian-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.beian-info a {
+    color: #999;
+    text-decoration: none;
+    font-size: 11px;
+}
+
+.beian-info a:hover {
+    text-decoration: underline;
+}
+
+.beian-info .separator {
+    color: #ddd;
+    font-size: 11px;
+    user-select: none;
+}
+
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}

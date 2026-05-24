@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="不转换全半角">
+  <defs>
+    <clipPath id="sun-side">
+      <polygon points="0,0 807.6,0 216.4,1024 0,1024" />
+    </clipPath>
+    <clipPath id="moon-side">
+      <polygon points="807.6,0 1024,0 1024,1024 216.4,1024" />
+    </clipPath>
+    <mask id="diagonal-gap">
+      <rect width="1024" height="1024" fill="#fff" />
+      <line x1="216.4" y1="1024" x2="807.6" y2="0" stroke="#000" stroke-width="64" stroke-linecap="square" />
+    </mask>
+    <mask id="moon-cut">
+      <rect width="1024" height="1024" fill="#fff" />
+      <circle cx="674" cy="392" r="224" fill="#000" />
+    </mask>
+  </defs>
+  <g mask="url(#diagonal-gap)">
+    <circle clip-path="url(#sun-side)" cx="512" cy="512" r="250" fill="#b2211f" />
+    <circle clip-path="url(#moon-side)" mask="url(#moon-cut)" cx="512" cy="512" r="250" fill="#b2211f" />
+  </g>
+</svg>

@@ -1,0 +1,19 @@
+{
+  "name": "@bg7ldb/chinese-telecode",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync:corpora": "node scripts/sync-corpora-manifest.mjs",
+    "predev": "npm run sync:corpora",
+    "dev": "vite --host 127.0.0.1",
+    "prebuild": "npm run sync:corpora",
+    "preserve": "npm run sync:corpora",
+    "serve": "node server.mjs",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1"
+  },
+  "devDependencies": {
+    "vite": "^5.4.11"
+  }
+}

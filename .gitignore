@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+apps/*/node_modules/
+apps/*/package-lock.json
+apps/chinese-telecode/non-public/
+
+# Build outputs
+dist/
+build/
+coverage/
+apps/*/dist/
+apps/*/build/
+apps/*/coverage/
+.vite/
+apps/*/.vite/
+
+# Local environment
+.env
+.env.*
+!.env.example
+*.local
+*.log
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

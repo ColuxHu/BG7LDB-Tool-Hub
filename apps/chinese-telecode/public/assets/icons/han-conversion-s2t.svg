@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="转为繁体">
+  <defs>
+    <style>
+      @font-face {
+        font-family: "Source Han Serif TW Icon";
+        src: url("../fonts/source-han-serif/SourceHanSerifTW-Bold.otf") format("opentype");
+        font-weight: 700;
+      }
+
+      .glyph {
+        fill: #b2211f;
+        font-family: "Source Han Serif TW Icon", serif;
+        font-size: 760px;
+        font-weight: 700;
+        dominant-baseline: central;
+        text-anchor: middle;
+      }
+    </style>
+  </defs>
+  <text class="glyph" x="512" y="512">漢</text>
+</svg>

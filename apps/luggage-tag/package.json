@@ -1,0 +1,11 @@
+{
+  "name": "@bg7ldb/luggage-tag",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5174",
+    "build": "node ../../scripts/copy-static-app.mjs . index.html styles.css script.js fusion-pixel-font-12px-monospaced-ttf",
+    "preview": "vite preview --host 127.0.0.1 --port 4174"
+  }
+}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="标注异码">
+  <rect x="170" y="202" width="684" height="620" rx="82" fill="#fffaf0" stroke="#b2211f" stroke-width="68" />
+  <path d="M310 390h404M310 512h404M310 634h250" fill="none" stroke="#244b65" stroke-width="72" stroke-linecap="round" />
+  <circle cx="704" cy="646" r="88" fill="#b2211f" />
+  <path d="M662 646h84M704 604v84" fill="none" stroke="#fffaf0" stroke-width="42" stroke-linecap="round" />
+</svg>

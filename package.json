@@ -1,0 +1,30 @@
+{
+  "name": "bg7ldb-tools",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BG7LDB web tools monorepo.",
+  "type": "module",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "node scripts/dev-site.mjs",
+    "dev:site": "node scripts/dev-site.mjs",
+    "dev:hub": "npm run dev --workspace @bg7ldb/tool-hub",
+    "dev:luggage": "npm run dev --workspace @bg7ldb/luggage-tag",
+    "dev:table-tennis": "npm run dev --workspace @bg7ldb/table-tennis-doubles",
+    "dev:telecode": "npm run dev --workspace @bg7ldb/chinese-telecode",
+    "build": "npm run build --workspaces --if-present",
+    "preview:hub": "npm run preview --workspace @bg7ldb/tool-hub",
+    "preview:luggage": "npm run preview --workspace @bg7ldb/luggage-tag",
+    "preview:table-tennis": "npm run preview --workspace @bg7ldb/table-tennis-doubles",
+    "preview:telecode": "npm run preview --workspace @bg7ldb/chinese-telecode"
+  },
+  "devDependencies": {
+    "vite": "^5.4.11"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

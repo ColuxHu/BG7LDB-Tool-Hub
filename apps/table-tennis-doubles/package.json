@@ -1,0 +1,11 @@
+{
+  "name": "@bg7ldb/table-tennis-doubles",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5175",
+    "build": "node ../../scripts/copy-static-app.mjs . index.html manifest.json sw.js assets src",
+    "preview": "vite preview --host 127.0.0.1 --port 4175"
+  }
+}

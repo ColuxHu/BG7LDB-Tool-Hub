@@ -1,0 +1,95 @@
+{
+  "documents": [
+    {
+      "title": "答司马谏议书 简体",
+      "file": "Chinese/答司马谏议书_简体.txt",
+      "group": "Chinese",
+      "mode": "encode",
+      "bytes": 1271
+    },
+    {
+      "title": "千字文 繁体",
+      "file": "Chinese/千字文_繁体.txt",
+      "group": "Chinese",
+      "mode": "encode",
+      "bytes": 3750
+    },
+    {
+      "title": "千字文 简体",
+      "file": "Chinese/千字文_简体.txt",
+      "group": "Chinese",
+      "mode": "encode",
+      "bytes": 3750
+    },
+    {
+      "title": "沁园春·雪",
+      "file": "Chinese/沁园春·雪.txt",
+      "group": "Chinese",
+      "mode": "encode",
+      "bytes": 458
+    },
+    {
+      "title": "沁园春·长沙",
+      "file": "Chinese/沁园春·长沙.txt",
+      "group": "Chinese",
+      "mode": "encode",
+      "bytes": 470
+    },
+    {
+      "title": "王安石诗词五篇 简体",
+      "file": "Chinese/王安石诗词五篇_简体.txt",
+      "group": "Chinese",
+      "mode": "encode",
+      "bytes": 861
+    },
+    {
+      "title": "为人民服务",
+      "file": "Chinese/为人民服务.txt",
+      "group": "Chinese",
+      "mode": "encode",
+      "bytes": 2385
+    },
+    {
+      "title": "答司马谏议书 简体",
+      "file": "telecode/答司马谏议书_简体.txt",
+      "group": "telecode",
+      "mode": "decode",
+      "bytes": 2089
+    },
+    {
+      "title": "千字文 简体",
+      "file": "telecode/千字文_简体.txt",
+      "group": "telecode",
+      "mode": "decode",
+      "bytes": 6249
+    },
+    {
+      "title": "沁园春·雪",
+      "file": "telecode/沁园春·雪.txt",
+      "group": "telecode",
+      "mode": "decode",
+      "bytes": 759
+    },
+    {
+      "title": "沁园春·长沙",
+      "file": "telecode/沁园春·长沙.txt",
+      "group": "telecode",
+      "mode": "decode",
+      "bytes": 764
+    },
+    {
+      "title": "王安石诗词五篇 简体",
+      "file": "telecode/王安石诗词五篇_简体.txt",
+      "group": "telecode",
+      "mode": "decode",
+      "bytes": 1369
+    },
+    {
+      "title": "为人民服务",
+      "file": "telecode/为人民服务.txt",
+      "group": "telecode",
+      "mode": "decode",
+      "bytes": 3904
+    }
+  ]
+}
