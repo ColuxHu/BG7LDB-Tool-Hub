@@ -41,6 +41,22 @@ const strategies = {
   "mainland-only": ["kMainlandTelegraph"],
 };
 
+const specialDecodeEntries = {
+  9992: { char: "", label: "\u8d77\u59cb\u7740\u91cd\u53f7", type: "kMainlandTelegraph", control: "emphasis-start" },
+  9993: { char: "", label: "\u672b\u5c3e\u7740\u91cd\u53f7", type: "kMainlandTelegraph", control: "emphasis-end" },
+  9994: { char: "", label: "\u8d77\u59cb\u4e13\u540d\u53f7", type: "kMainlandTelegraph", control: "proper-start" },
+  9995: { char: "", label: "\u672b\u5c3e\u4e13\u540d\u53f7", type: "kMainlandTelegraph", control: "proper-end" },
+  9998: { char: " ", label: "\u7a7a\u683c", type: "kMainlandTelegraph" },
+};
+
+const specialDecodeChars = {
+  "\\\u8d77\u59cb\u7740\u91cd\u53f7": specialDecodeEntries[9992],
+  "\\\u672b\u5c3e\u7740\u91cd\u53f7": specialDecodeEntries[9993],
+  "\\\u8d77\u59cb\u4e13\u540d\u53f7": specialDecodeEntries[9994],
+  "\\\u672b\u5c3e\u4e13\u540d\u53f7": specialDecodeEntries[9995],
+  "\\\u7a7a\u683c": specialDecodeEntries[9998],
+};
+
 const state = {
   db: null,
   hanConversion: { s2t: {}, t2s: {} },
@@ -590,14 +606,116 @@ function parseCodes(text) {
   return text.match(/\d{4}/g) || [];
 }
 
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#39;",
+  })[char]);
+}
+
+function normalizeDecodedMatch(code, item) {
+  const special = specialDecodeChars[item.char] ?? specialDecodeEntries[code];
+  if (special) {
+    return { ...item, ...special };
+  }
+  return {
+    ...item,
+    label: item.char,
+  };
+}
+
 function decodeCodes(text) {
   const preferred = strategies[els.strategy.value] || strategies["taiwan-first"];
   return parseCodes(text).map((code) => {
-    const matches = state.db.reverse?.[code] || [];
+    const matches = state.db.reverse?.[code] || (specialDecodeEntries[code] ? [specialDecodeEntries[code]] : []);
     const sorted = [...matches].sort((a, b) => {
       return preferred.indexOf(a.type) - preferred.indexOf(b.type);
-    });
+    }).map((item) => normalizeDecodedMatch(code, item));
     return { code, matches: sorted };
+  });
+}
+
+function getDecodedEntries(rows) {
+  let emphasis = false;
+  let properName = false;
+  const entries = [];
+
+  for (const row of rows) {
+    const match = row.matches[0];
+    if (!match) {
+      entries.push({ char: "\u25a1", code: row.code, field: "", note: "", emphasis, properName });
+      continue;
+    }
+
+    if (match.control === "emphasis-start") {
+      emphasis = true;
+      continue;
+    }
+    if (match.control === "emphasis-end") {
+      emphasis = false;
+      continue;
+    }
+    if (match.control === "proper-start") {
+      properName = true;
+      continue;
+    }
+    if (match.control === "proper-end") {
+      properName = false;
+      continue;
+    }
+
+    entries.push({
+      char: match.char,
+      code: row.code,
+      field: match.type || "",
+      note: row.matches.length > 1 ? "\u591a\u5b57" : "",
+      emphasis,
+      properName,
+    });
+  }
+
+  return entries;
+}
+
+function markedTextClass(entry) {
+  return [
+    "decoded-char",
+    entry.emphasis ? "has-emphasis" : "",
+    entry.properName ? "has-proper-name" : "",
+  ].filter(Boolean).join(" ");
+}
+
+function renderMarkedText(entries) {
+  return entries.map((entry) => {
+    const char = entry.char === " " ? "&nbsp;" : escapeHtml(entry.char || "");
+    return `<span class="${markedTextClass(entry)}">${char}</span>`;
+  }).join("");
+}
+
+function paperCharClass(entry) {
+  return [
+    "paper-char",
+    entry.emphasis ? "has-emphasis" : "",
+    entry.properName ? "has-proper-name" : "",
+    entry.properNameJoinBefore ? "proper-join-before" : "",
+    entry.properNameJoinAfter ? "proper-join-after" : "",
+  ].filter(Boolean).join(" ");
+}
+
+function applyPaperLineJoins(entries, columns = 10) {
+  return entries.map((entry, index) => {
+    if (!entry.properName) {
+      return entry;
+    }
+    const col = index % columns;
+    return {
+      ...entry,
+      properNameJoinBefore: col > 0 && Boolean(entries[index - 1]?.properName),
+      properNameJoinAfter: col < columns - 1 && Boolean(entries[index + 1]?.properName),
+    };
   });
 }
 
@@ -640,15 +758,16 @@ function renderPaperCode(entry) {
 
   return `
     <span class="paper-code-box${singleClass}">
-      <span class="paper-code ${codeClasses[first.field] || ""}">${first.code || ""}</span>
-      <span class="paper-code-alt ${codeClasses[second.field] || ""}">${second.code || ""}</span>
+      <span class="paper-code ${codeClasses[first.field] || ""}">${escapeHtml(first.code || "")}</span>
+      <span class="paper-code-alt ${codeClasses[second.field] || ""}">${escapeHtml(second.code || "")}</span>
     </span>
-    <span class="paper-char">${entry.char || ""}</span>
+    <span class="${paperCharClass(entry)}">${entry.char === " " ? "&nbsp;" : escapeHtml(entry.char || "")}</span>
   `;
 }
 
 function renderEncode(entries) {
   els.codeOutput.innerHTML = "";
+  els.codeOutput.classList.remove("is-decoded");
   els.reverseOutput.innerHTML = "";
   els.reverseOutput.classList.remove("is-hidden");
   const fragment = document.createDocumentFragment();
@@ -685,11 +804,13 @@ function renderEncode(entries) {
 
 function renderDecode(rows) {
   els.codeOutput.innerHTML = "";
+  els.codeOutput.classList.add("is-decoded");
   els.paperGrid.innerHTML = "";
   els.reverseOutput.innerHTML = "";
   els.reverseOutput.classList.remove("is-hidden");
   const fragment = document.createDocumentFragment();
   const missingRows = rows.filter((row) => !row.matches.length);
+  const decodedEntries = getDecodedEntries(rows);
 
   for (const row of rows) {
     const line = document.createElement("div");
@@ -698,7 +819,7 @@ function renderDecode(rows) {
       ? row.matches
         .map(
           (item) =>
-            `<span class="candidate ${codeClasses[item.type] || ""}">${item.char} ${fieldLabels[item.type]}</span>`,
+            `<span class="candidate ${codeClasses[item.type] || ""}">${escapeHtml(item.label ?? item.char)} ${fieldLabels[item.type]}</span>`,
         )
         .join("")
       : `<span class="candidate">未收录</span>`;
@@ -707,18 +828,11 @@ function renderDecode(rows) {
   }
 
   els.reverseOutput.append(fragment);
-  const decoded = rows.map((row) => row.matches[0]?.char || "□").join("");
+  const decoded = decodedEntries.map((entry) => entry.char).join("");
   state.plainCodes = rows.map((row) => row.code).join(" ");
   state.plainText = decoded;
-  els.codeOutput.textContent = decoded || "等待输入";
-  renderPaper(
-    rows.map((row) => ({
-      char: row.matches[0]?.char || "□",
-      code: row.code,
-      field: row.matches[0]?.type || "",
-      note: row.matches.length > 1 ? "多字" : "",
-    })),
-  );
+  els.codeOutput.innerHTML = decodedEntries.length ? renderMarkedText(decodedEntries) : "等待输入";
+  renderPaper(decodedEntries);
   els.summary.textContent = rows.length ? `译出 ${rows.length} 组电码` : "未识别四位电码";
   setGlobalAlert(
     missingRows.length
@@ -730,7 +844,7 @@ function renderDecode(rows) {
 function renderPaper(entries) {
   els.paperGrid.innerHTML = "";
   const fragment = document.createDocumentFragment();
-  const visible = entries.filter((entry) => !entry.whitespace);
+  const visible = applyPaperLineJoins(entries.filter((entry) => !entry.whitespace));
   const rows = Math.max(2, Math.ceil(visible.length / 10));
 
   for (let row = 0; row < rows; row += 1) {
@@ -820,12 +934,8 @@ function drawExportCanvas() {
   const entries =
     state.mode === "encode"
       ? state.entries.filter((entry) => !entry.whitespace)
-      : state.entries.map((row) => ({
-        char: row.matches[0]?.char || "□",
-        code: row.code,
-        field: row.matches[0]?.type || "",
-        note: row.matches.length > 1 ? "多字" : "",
-      }));
+      : getDecodedEntries(state.entries);
+  const paperEntries = applyPaperLineJoins(entries);
 
   const width = 1400;
   const startX = 72;
@@ -836,7 +946,7 @@ function drawExportCanvas() {
   const cell = contentWidth / columns;
   const codeHeight = 40;
   const rowHeight = codeHeight + cell;
-  const rows = Math.max(2, Math.ceil(entries.length / columns));
+  const rows = Math.max(2, Math.ceil(paperEntries.length / columns));
   const gridHeight = rows * rowHeight;
   const footerTop = startY + gridHeight + 44;
   const height = footerTop + 96;
@@ -889,7 +999,7 @@ function drawExportCanvas() {
   ctx.lineTo(startX + columns * cell + countWidth, startY + rows * rowHeight);
   ctx.stroke();
 
-  entries.forEach((entry, index) => {
+  paperEntries.forEach((entry, index) => {
     const x = startX + (index % columns) * cell;
     const y = startY + Math.floor(index / columns) * rowHeight;
     const lines = getPaperCodeLines(entry);
@@ -918,6 +1028,24 @@ function drawExportCanvas() {
     ctx.textBaseline = "middle";
     // 在 codeHeight 之下的方格区域垂直居中
     ctx.fillText(entry.char, x + cell / 2, y + codeHeight + cell / 2);
+    if (entry.char && entry.char !== " " && (entry.emphasis || entry.properName)) {
+      ctx.fillStyle = "#111111";
+      if (entry.emphasis) {
+        ctx.beginPath();
+        ctx.arc(x + cell / 2, y + codeHeight + cell * 0.94, Math.max(3, cell * 0.045), 0, Math.PI * 2);
+        ctx.fill();
+      }
+      if (entry.properName) {
+        const start = entry.properNameJoinBefore ? 0 : cell * 0.18;
+        const end = entry.properNameJoinAfter ? cell : cell * 0.82;
+        ctx.strokeStyle = "#111111";
+        ctx.lineWidth = Math.max(3, cell * 0.028);
+        ctx.beginPath();
+        ctx.moveTo(x + start, y + codeHeight + cell * 0.92);
+        ctx.lineTo(x + end, y + codeHeight + cell * 0.92);
+        ctx.stroke();
+      }
+    }
     // 恢复默认对齐，将在循环末尾统一设置
     ctx.textBaseline = "alphabetic";
   });
