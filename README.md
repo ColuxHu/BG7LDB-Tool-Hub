@@ -111,6 +111,14 @@ Footer HTML is injected from environment variables at dev/build time. The reposi
 
 Set `SITE_FOOTER_HTML` to the complete footer markup when you want the footer to render. Leave it unset for public/open-source use.
 
+The value may be one line:
+
+```env
+SITE_FOOTER_HTML='<footer class="site-footer">...</footer>'
+```
+
+Quoted multi-line HTML is also supported by the repository build scripts.
+
 ## Open Source Notes
 
 - Generated outputs such as `dist/`, local logs, and dependency folders are ignored at the repository root.

@@ -24,6 +24,9 @@ BRANCH="${DEPLOY_BRANCH:-main}"
 COPY_TO="${DEPLOY_COPY_TO:-}"
 RELOAD_NGINX="${DEPLOY_RELOAD_NGINX:-0}"
 SKIP_INSTALL=0
+GENERATED_FILES=(
+  "apps/chinese-telecode/public/corpora/manifest.json"
+)
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -64,10 +67,20 @@ run() {
   "$@"
 }
 
+restore_generated_files() {
+  for file in "${GENERATED_FILES[@]}"; do
+    if [[ -e "${file}" ]]; then
+      run git restore -- "${file}"
+    fi
+  done
+}
+
 if [[ ! -d .git ]]; then
   echo "This script must run inside a git checkout." >&2
   exit 1
 fi
+
+restore_generated_files
 
 if [[ -n "$(git status --porcelain --untracked-files=no)" ]]; then
   echo "Tracked files have local changes. Commit, stash, or reset them before deploying." >&2
@@ -85,6 +98,7 @@ if [[ "${SKIP_INSTALL}" != "1" ]]; then
 fi
 
 run npm run build:site
+restore_generated_files
 
 SITE_DIR="${REPO_ROOT}/dist/site"
 if [[ ! -f "${SITE_DIR}/index.html" ]]; then

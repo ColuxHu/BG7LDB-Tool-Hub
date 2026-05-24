@@ -16,8 +16,11 @@ async function pathExists(path) {
 
 const entries = await readdir(appsRoot, { withFileTypes: true });
 
-await rm(siteRoot, { recursive: true, force: true });
 await mkdir(siteRoot, { recursive: true });
+
+for (const entry of await readdir(siteRoot, { withFileTypes: true })) {
+  await rm(resolve(siteRoot, entry.name), { recursive: true, force: true });
+}
 
 for (const entry of entries) {
   if (!entry.isDirectory()) {
@@ -42,3 +45,4 @@ for (const entry of entries) {
 }
 
 console.log(`Built deployable site at ${siteRoot}`);
+console.log("The site root directory was preserved for Docker bind mounts.");

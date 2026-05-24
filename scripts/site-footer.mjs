@@ -9,8 +9,10 @@ let loadedEnv = null;
 
 function parseDotenv(text) {
   const values = {};
+  const lines = text.split(/\r?\n/);
 
-  for (const rawLine of text.split(/\r?\n/)) {
+  for (let index = 0; index < lines.length; index += 1) {
+    const rawLine = lines[index];
     const line = rawLine.trim();
     if (!line || line.startsWith("#")) {
       continue;
@@ -24,8 +26,17 @@ function parseDotenv(text) {
     const key = line.slice(0, separator).trim();
     let value = line.slice(separator + 1).trim();
     const quote = value[0];
-    if ((quote === "\"" || quote === "'") && value.endsWith(quote)) {
-      value = value.slice(1, -1);
+    if (quote === "\"" || quote === "'") {
+      let quotedValue = value.slice(1);
+
+      while (!quotedValue.endsWith(quote) && index < lines.length - 1) {
+        index += 1;
+        quotedValue += `\n${lines[index]}`;
+      }
+
+      value = quotedValue.endsWith(quote)
+        ? quotedValue.slice(0, -1)
+        : quotedValue;
     }
     values[key] = value;
   }
