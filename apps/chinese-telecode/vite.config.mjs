@@ -81,6 +81,7 @@ function corporaManifestPlugin() {
 }
 
 export default {
+  base: "./",
   publicDir: "public",
   plugins: [corporaManifestPlugin(), siteFooterPlugin()],
 };

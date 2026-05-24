@@ -48,6 +48,12 @@ http://127.0.0.1:5173/
 
 This site-level dev server supports navigation between apps and injects the optional private footer from `.env`.
 
+Any folder under `apps/` that contains an `index.html` is mapped automatically. For example, `apps/morse-code/index.html` is available at:
+
+```text
+http://127.0.0.1:5173/morse-code/
+```
+
 Run a single app when you only need that workspace:
 
 ```bash
@@ -64,6 +70,14 @@ npm run build
 ```
 
 The build output for each app is written to its own `apps/<app>/dist/` directory.
+
+Build a deployable site tree:
+
+```bash
+npm run build:site
+```
+
+The deployable output is written to `dist/site/`. The `tool-hub` app becomes the site root, and every other app is copied to `dist/site/<app-folder>/`.
 
 ## Private Site Footer
 

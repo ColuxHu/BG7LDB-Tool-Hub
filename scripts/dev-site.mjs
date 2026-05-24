@@ -1,18 +1,40 @@
 import { createReadStream } from "node:fs";
-import { access, readFile, stat } from "node:fs/promises";
+import { access, readdir, readFile, stat } from "node:fs/promises";
 import { createServer } from "node:http";
 import { extname, normalize, resolve, sep } from "node:path";
 import { buildSiteFooterHtml, injectSiteFooter, loadSiteEnv } from "./site-footer.mjs";
 
 const repoRoot = resolve(".");
+const appsRoot = resolve(repoRoot, "apps");
 const port = Number(process.env.PORT || 5173);
 
-const routes = [
-  { prefix: "/luggage-tag", root: resolve(repoRoot, "apps/luggage-tag") },
-  { prefix: "/table-tennis-doubles", root: resolve(repoRoot, "apps/table-tennis-doubles") },
-  { prefix: "/chinese-telecode", root: resolve(repoRoot, "apps/chinese-telecode") },
-  { prefix: "", root: resolve(repoRoot, "apps/tool-hub") },
-];
+async function discoverRoutes() {
+  const entries = await readdir(appsRoot, { withFileTypes: true });
+  const appRoutes = [];
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+
+    const appRoot = resolve(appsRoot, entry.name);
+    if (!(await fileExists(resolve(appRoot, "index.html")))) {
+      continue;
+    }
+
+    appRoutes.push({
+      prefix: entry.name === "tool-hub" ? "" : `/${entry.name}`,
+      root: appRoot,
+      name: entry.name,
+    });
+  }
+
+  return appRoutes.sort((a, b) => {
+    if (a.prefix === "") return 1;
+    if (b.prefix === "") return -1;
+    return b.prefix.length - a.prefix.length;
+  });
+}
 
 const mimeTypes = {
   ".css": "text/css; charset=utf-8",
@@ -28,7 +50,7 @@ const mimeTypes = {
   ".txt": "text/plain; charset=utf-8",
 };
 
-function matchRoute(pathname) {
+function matchRoute(routes, pathname) {
   return routes.find((route) => (
     route.prefix
       ? pathname === route.prefix || pathname.startsWith(`${route.prefix}/`)
@@ -38,7 +60,7 @@ function matchRoute(pathname) {
 
 function resolveRequestPath(url) {
   const { pathname } = new URL(url, `http://127.0.0.1:${port}`);
-  const route = matchRoute(pathname);
+  const route = matchRoute(routes, pathname);
   if (!route) {
     return null;
   }
@@ -72,6 +94,8 @@ async function sendHtml(response, filePath, appRoot) {
   });
   response.end(html);
 }
+
+const routes = await discoverRoutes();
 
 const server = createServer(async (request, response) => {
   const resolved = resolveRequestPath(request.url || "/");
@@ -117,4 +141,5 @@ const server = createServer(async (request, response) => {
 
 server.listen(port, "127.0.0.1", () => {
   console.log(`Tools site ready at http://127.0.0.1:${port}`);
+  console.log(`Mapped apps: ${routes.map((route) => route.prefix || "/").join(", ")}`);
 });

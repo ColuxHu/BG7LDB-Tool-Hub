@@ -10,6 +10,7 @@ This repository follows an app-first monorepo layout:
 
 - Each app has its own `package.json` with a scoped package name.
 - Root scripts delegate to app workspaces instead of reaching into app folders manually.
+- Local site routing and deployable site assembly discover `apps/*/index.html` automatically.
 - Runtime assets that must be deployed with an app live inside that app.
 - Build outputs, local logs, and dependency folders are not source files and are ignored.
 

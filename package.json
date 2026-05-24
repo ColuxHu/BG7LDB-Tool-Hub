@@ -15,6 +15,7 @@
     "dev:table-tennis": "npm run dev --workspace @bg7ldb/table-tennis-doubles",
     "dev:telecode": "npm run dev --workspace @bg7ldb/chinese-telecode",
     "build": "npm run build --workspaces --if-present",
+    "build:site": "npm run build && node scripts/build-site.mjs",
     "preview:hub": "npm run preview --workspace @bg7ldb/tool-hub",
     "preview:luggage": "npm run preview --workspace @bg7ldb/luggage-tag",
     "preview:table-tennis": "npm run preview --workspace @bg7ldb/table-tennis-doubles",
