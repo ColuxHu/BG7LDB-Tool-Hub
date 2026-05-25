@@ -406,42 +406,6 @@ canvas {
     margin-bottom: 0;
 }
 
-footer {
-    width: 100%;
-    max-width: 550px;
-    margin-top: auto;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-    text-align: center;
-    font-size: 12px;
-    color: #999;
-    line-height: 1.8;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-footer p {
-    margin: 0;
-}
-
-footer .beian-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-}
-
-footer a {
-    color: #666;
-    text-decoration: none;
-}
-
-footer a:hover {
-    text-decoration: underline;
-}
-
 @media (max-width: 480px) {
     body {
         padding: 15px 10px;
@@ -470,16 +434,5 @@ footer a:hover {
     .btn {
         padding: 12px;
         font-size: 14px;
-    }
-
-    footer {
-        font-size: 10px;
-        line-height: 1.6;
-        max-width: 100%;
-    }
-
-    footer .beian-info {
-        gap: 6px;
-        margin-top: 8px;
     }
 }

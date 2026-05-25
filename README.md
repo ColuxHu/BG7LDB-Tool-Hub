@@ -252,12 +252,21 @@ The deploy script updates Git, installs dependencies, builds `dist/site`, and pr
 
 Footer HTML is injected from environment variables at dev/build time. The repository only tracks [.env.example](.env.example); real `.env` files stay local and are ignored by Git.
 
-Set `SITE_FOOTER_HTML` to the complete footer markup when you want the footer to render. Leave it unset for public/open-source use.
+Recommended setup: keep `SITE_FOOTER_HTML` in `.env` and use the built-in footer CSS block so links follow the shared hover behavior.
 
 The value may be one line:
 
 ```env
-SITE_FOOTER_HTML='<footer class="site-footer">...</footer>'
+SITE_FOOTER_HTML='<footer class="site-footer"><style>
+    .site-footer a {
+      text-decoration: none !important;
+    }
+    .site-footer a:hover,
+    .site-footer a:focus,
+    .site-footer a:active {
+      text-decoration: underline !important; 
+    }
+  </style>...</footer>'
 ```
 
 Quoted multi-line HTML is also supported by the repository build scripts.
