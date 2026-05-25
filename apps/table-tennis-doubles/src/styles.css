@@ -18,6 +18,7 @@
   --g-yellow-rgb: 251, 188, 5;
   --g-green-rgb: 52, 168, 83;
   --g-orange-rgb: 245, 124, 0;
+
   --g-on-dark: #ffffff;
   --g-on-light: #111827;
   --team-a-rgb: 96, 165, 250;
@@ -133,67 +134,6 @@ button:disabled {
   border: 2px solid rgba(212, 212, 216, .18);
   border-radius: 8px;
   box-shadow: 0 24px 80px rgba(0, 0, 0, .45);
-}
-
-.site-footer {
-  width: min(98vw, calc(var(--app-vh) * 1.72));
-  margin: 0 auto 18px;
-  padding: 8px 12px 14px;
-  color: #a1a1aa;
-  text-align: center;
-  font-size: 12px;
-  line-height: 1.45;
-}
-
-.site-footer p {
-  margin: 0;
-}
-
-.site-footer a {
-  color: #d4d4d8;
-  text-decoration: none;
-}
-
-.site-footer a:hover {
-  color: #f8fafc;
-  text-decoration: underline;
-}
-
-.beian-info {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-
-.beian-info a {
-  color: #999;
-  font-size: 11px;
-}
-
-.beian-info span {
-  color: #ddd;
-  font-size: 11px;
-  user-select: none;
-}
-
-.police-beian {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.police-beian img {
-  width: 16px;
-  height: 16px;
-}
-
-.police-beian span {
-  margin-left: 4px;
-  color: inherit;
 }
 
 .topbar,

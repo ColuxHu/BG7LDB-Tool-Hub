@@ -216,54 +216,6 @@ textarea {
   margin: 0 auto;
 }
 
-.site-footer {
-  width: min(1280px, calc(100% - 56px));
-  margin: 0 auto 28px;
-  padding: 18px 16px 24px;
-  color: var(--muted);
-  text-align: center;
-}
-
-.site-footer p {
-  margin: 0;
-  font-size: 13px;
-}
-
-.site-footer a {
-  color: var(--blue);
-  text-decoration: none;
-}
-
-.site-footer a:hover {
-  text-decoration: underline;
-}
-
-.beian-info {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 10px;
-}
-
-.beian-info a,
-.beian-info span {
-  color: #7f776c;
-  font-size: 11px;
-}
-
-.police-beian {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.police-beian img {
-  flex: 0 0 auto;
-  margin-right: 4px;
-}
-
 .masthead {
   position: relative;
   display: flex;
