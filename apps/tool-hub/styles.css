@@ -169,6 +169,14 @@ html[data-language-mode="en"] h3 [data-lang="en"] {
     font-size: 1em;
 }
 
+html[data-language-mode="en"] .tool-card h3 {
+    align-items: center;
+}
+
+html[data-language-mode="en"] .tool-card h3::before {
+    margin-top: 0;
+}
+
 html[data-language-mode="zh"] [data-lang="en"],
 html[data-language-mode="en"] [data-lang="zh"] {
     display: none;
