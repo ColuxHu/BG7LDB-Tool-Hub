@@ -55,6 +55,6 @@ npm run build --workspace @bg7ldb/chinese-telecode
 ## 数据说明
 
 - `public/data/telegraph_compat_db.supplemented.json`：前端电报码查询主数据。
-- `public/data/han_conversion_map.json`：简繁转换映射表，只使用 Unihan 明确的 `kTraditionalVariant` / `kSimplifiedVariant` 关系。
+- 简繁转换由 `opencc-js` 在前端打包代码中完成，不再发布独立映射表。
 - `public/corpora/`：示例语料及其 manifest。
 - `non-public/`：本地原始数据、历史资料、数据处理脚本和扫描报告，不作为 Web 发布入口。

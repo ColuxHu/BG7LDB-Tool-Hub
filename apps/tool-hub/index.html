@@ -1,54 +1,120 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-language-mode="zh">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BG7LDB 个人小站 | Tool Hub</title>
+    <title>BG7LDB 个人工具站 | Tool Hub</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-
     <header>
+        <div class="language-switcher" role="group" aria-label="Language mode">
+            <button type="button" class="language-option" data-mode="zh" aria-pressed="true">中文</button>
+            <button type="button" class="language-option" data-mode="en" aria-pressed="false">EN</button>
+        </div>
         <h1>BG7LDB TOOL HUB</h1>
-        <p>「 生命在于折腾 」</p>
+        <p>
+            <span lang="zh-CN" data-lang="zh">生命在于折腾</span>
+            <span lang="en" data-lang="en">Built for useful tinkering</span>
+        </p>
     </header>
 
     <div class="container">
         <div class="grid">
             <a href="/luggage-tag/" class="tool-card">
-                <h3>行李牌生成器</h3>
-                <p>专为2.13inch三色墨水屏标签定制。支持像素风字体、自动二维码排版，生成锐利的无损 PNG 图片。</p>
+                <h3>
+                    <span lang="zh-CN" data-lang="zh">行李牌生成器</span>
+                    <span lang="en" data-lang="en">Luggage Tag Generator</span>
+                </h3>
+                <p>
+                    <span lang="zh-CN" data-lang="zh">专为 2.13 inch 三色墨水屏标签定制，支持像素风字体、自动二维码排版，生成锐利的无损 PNG 图片。</span>
+                    <span lang="en" data-lang="en">Creates crisp PNG luggage tags for 2.13 inch tri-color e-paper labels, with pixel fonts and automatic QR layout.</span>
+                </p>
                 <span class="status online">ONLINE</span>
             </a>
 
             <a href="/table-tennis-doubles/" class="tool-card">
-                <h3>乒乓球双打辅助记分器</h3>
-                <p>为解决乒乓球双打规则复杂，新手难以记住换位换边顺序，双方记分不严谨等问题设计的程序。<br>移动端推荐使用平板等大屏设备横屏使用。</p>
+                <h3>
+                    <span lang="zh-CN" data-lang="zh">乒乓球双打辅助记分器</span>
+                    <span lang="en" data-lang="en">Table Tennis Doubles Scorer</span>
+                </h3>
+                <p>
+                    <span lang="zh-CN" data-lang="zh">为解决乒乓球双打规则复杂、新手难以记住换位换边顺序、双方记分不严谨等问题设计。移动端推荐使用平板等大屏设备横屏操作。</span>
+                    <span lang="en" data-lang="en">A doubles scoring assistant that tracks serving order, side changes, and rotation details. Best used in landscape mode on a tablet or larger screen.</span>
+                </p>
                 <span class="status online">ONLINE</span>
             </a>
-
 
             <a href="/chinese-telecode/" class="tool-card">
-                <h3>中文电报码兼容译码台</h3>
-                <p>中文转电码，电码转中文转换工具。兼容kMainlandTelegraph与kTaiwanTelegraph电码。</p>
+                <h3>
+                    <span lang="zh-CN" data-lang="zh">中文电报码兼容译码台</span>
+                    <span lang="en" data-lang="en">Chinese Telecode Desk</span>
+                </h3>
+                <p>
+                    <span lang="zh-CN" data-lang="zh">中文转电码、电码转中文的转换工具，兼容 kMainlandTelegraph 与 kTaiwanTelegraph 电码。</span>
+                    <span lang="en" data-lang="en">Encode Chinese text into telegraph codes and decode codes back to Chinese, with Mainland and Taiwan telegraph code support.</span>
+                </p>
                 <span class="status online">ONLINE</span>
             </a>
 
-            <a href="#" class="tool-card disabled">
-                <h3>摩斯电码转换</h3>
-                <p>支持中文/英文与摩斯电码互转。内置 Web Audio API，可实时模拟电台发报音频。开发中...</p>
+            <a href="#" class="tool-card disabled" aria-disabled="true">
+                <h3>
+                    <span lang="zh-CN" data-lang="zh">摩斯电码转换</span>
+                    <span lang="en" data-lang="en">Morse Code Converter</span>
+                </h3>
+                <p>
+                    <span lang="zh-CN" data-lang="zh">规划支持中文、英文与摩斯电码互转，内置 Web Audio API，可即时模拟电台发报音频。</span>
+                    <span lang="en" data-lang="en">Planned support for Chinese, English, and Morse conversion, with Web Audio playback for radio-style keying.</span>
+                </p>
                 <span class="status dev">COMING SOON</span>
             </a>
 
             <div class="tool-card placeholder">
-                <h3>更多工具...</h3>
-                <p>标准电码本预览，HAM地理信息转换等模块正在规划中。</p>
+                <h3>
+                    <span lang="zh-CN" data-lang="zh">更多工具...</span>
+                    <span lang="en" data-lang="en">More Tools...</span>
+                </h3>
+                <p>
+                    <span lang="zh-CN" data-lang="zh">标准电码本预览、HAM 地理信息转换等模块正在规划中。</span>
+                    <span lang="en" data-lang="en">Standard telecode book previews, HAM location utilities, and other modules are on the roadmap.</span>
+                </p>
             </div>
         </div>
     </div>
     <!-- SITE_FOOTER -->
+    <script>
+        const modeLabels = {
+            zh: "BG7LDB 个人工具站 | Tool Hub",
+            en: "BG7LDB Tool Hub",
+        };
+        const languageModes = {
+            zh: "zh-CN",
+            en: "en",
+        };
+        const modeButtons = document.querySelectorAll(".language-option");
+        const storedMode = localStorage.getItem("toolHubLanguageMode");
+        const initialMode = ["zh", "en"].includes(storedMode) ? storedMode : "zh";
+
+        function setLanguageMode(mode) {
+            document.documentElement.dataset.languageMode = mode;
+            document.documentElement.lang = languageModes[mode];
+            document.title = modeLabels[mode];
+            localStorage.setItem("toolHubLanguageMode", mode);
+            modeButtons.forEach((button) => {
+                const isActive = button.dataset.mode === mode;
+                button.classList.toggle("is-active", isActive);
+                button.setAttribute("aria-pressed", String(isActive));
+            });
+        }
+
+        modeButtons.forEach((button) => {
+            button.addEventListener("click", () => setLanguageMode(button.dataset.mode));
+        });
+
+        setLanguageMode(initialMode);
+    </script>
 </body>
 
 </html>

@@ -8,7 +8,7 @@
     "apps/*"
   ],
   "scripts": {
-    "predev": "npm run sync:corpora --workspace @bg7ldb/chinese-telecode",
+    "predev": "npm run prepare:runtime --workspace @bg7ldb/chinese-telecode",
     "dev": "node scripts/dev-site.mjs",
     "dev:site": "node scripts/dev-site.mjs",
     "dev:hub": "npm run dev --workspace @bg7ldb/tool-hub",

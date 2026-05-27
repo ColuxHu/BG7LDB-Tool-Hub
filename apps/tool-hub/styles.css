@@ -1,6 +1,6 @@
 :root {
     --primary-color: #000000;
-    --accent-color: #FF0000;
+    --accent-color: #d71920;
     --bg-color: #f4f4f5;
     --card-bg: #ffffff;
     --text-main: #333;
@@ -8,7 +8,7 @@
 }
 
 body {
-    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-family: "PingFang SC", "Microsoft YaHei", "PingFang TC", "Microsoft JhengHei", Arial, sans-serif;
     background-color: var(--bg-color);
     color: var(--text-main);
     margin: 0;
@@ -21,6 +21,8 @@ body {
 header {
     padding: 60px 20px;
     text-align: center;
+    width: min(900px, 100%);
+    box-sizing: border-box;
 }
 
 header h1 {
@@ -36,6 +38,56 @@ header p {
     margin-top: 15px;
     color: var(--text-dim);
     font-size: 1.1rem;
+}
+
+.language-switcher {
+    display: inline-flex;
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 10;
+    border: 2px solid var(--primary-color);
+    background: var(--card-bg);
+    box-shadow: 3px 3px 0 var(--primary-color);
+}
+
+.language-option {
+    appearance: none;
+    border: 0;
+    border-right: 2px solid var(--primary-color);
+    background: transparent;
+    color: var(--primary-color);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    min-width: 54px;
+    padding: 8px 12px;
+    position: relative;
+}
+
+.language-option:last-child {
+    border-right: 0;
+}
+
+.language-option.is-active {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.language-option.is-active::after {
+    content: "";
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    width: 6px;
+    height: 6px;
+    background: var(--accent-color);
+}
+
+.language-option:focus-visible {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 3px;
 }
 
 .container {
@@ -62,25 +114,32 @@ header p {
     position: relative;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .tool-card:hover {
     transform: translate(-4px, -4px);
-    box-shadow: 4px 4px 0px var(--primary-color);
+    box-shadow: 4px 4px 0 var(--primary-color);
 }
 
 .tool-card h3 {
     margin: 0 0 10px 0;
     font-size: 1.4rem;
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 3px 10px;
 }
 
 .tool-card h3::before {
-    content: "█";
+    content: "";
+    width: 0.72em;
+    height: 0.72em;
+    margin-top: 0.32em;
+    display: inline-block;
+    background: var(--accent-color);
     color: var(--accent-color);
-    margin-right: 10px;
-    font-size: 1rem;
+    grid-row: 1 / span 2;
 }
 
 .tool-card p {
@@ -89,6 +148,43 @@ header p {
     color: #666;
     margin-bottom: 20px;
     flex-grow: 1;
+}
+
+[data-lang] {
+    display: block;
+}
+
+[data-lang="en"] {
+    color: #666;
+}
+
+h3 [data-lang="en"] {
+    color: #777;
+    font-size: 0.78em;
+    font-weight: 700;
+}
+
+html[data-language-mode="en"] h3 [data-lang="en"] {
+    color: inherit;
+    font-size: 1em;
+}
+
+html[data-language-mode="zh"] [data-lang="en"],
+html[data-language-mode="en"] [data-lang="zh"] {
+    display: none;
+}
+
+html[data-language-mode="zh"] .tool-card h3::before,
+html[data-language-mode="en"] .tool-card h3::before {
+    grid-row: 1;
+}
+
+html[data-language-mode="en"] body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+html[data-language-mode="en"] header p {
+    font-size: 1rem;
 }
 
 .status {
@@ -120,6 +216,11 @@ header p {
     box-shadow: none;
 }
 
+.tool-card.placeholder:hover {
+    transform: none;
+    box-shadow: none;
+}
+
 .tool-card.placeholder {
     border-style: dashed;
     border-color: #ccc;
@@ -132,6 +233,20 @@ header p {
 }
 
 @media (max-width: 600px) {
+    .language-switcher {
+        top: 12px;
+        right: 12px;
+    }
+
+    .language-option {
+        min-width: 50px;
+        padding: 7px 10px;
+    }
+
+    header {
+        padding-top: 72px;
+    }
+
     header h1 {
         font-size: 1.8rem;
     }

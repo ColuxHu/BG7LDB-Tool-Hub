@@ -1,5 +1,6 @@
+import { convertHanText } from "./han-conversion.js";
+
 const DATA_PATH = "data/telegraph_compat_db.supplemented.json";
-const HAN_CONVERSION_PATH = "data/han_conversion_map.json";
 const CORPORA_MANIFEST_PATH = "corpora/manifest.json";
 const CANVAS_SERIF_FALLBACK = '"Noto Serif SC", "Songti SC", SimSun, serif';
 
@@ -59,13 +60,13 @@ const specialDecodeChars = {
 
 const state = {
   db: null,
-  hanConversion: { s2t: {}, t2s: {} },
   mode: "encode",
   entries: [],
   plainCodes: "",
   plainText: "",
   corpusDocuments: [],
   selectedCorpusByMode: { encode: "", decode: "" },
+  refreshVersion: 0,
 };
 
 const els = {
@@ -266,12 +267,10 @@ function setGlobalAlert(message) {
 
 function getAssetCandidates(path) {
   const cleanPath = path.replace(/^\/+/, "");
-  return [
-    `./public/${cleanPath}`,
-    `./${cleanPath}`,
-    `/public/${cleanPath}`,
-    `/${cleanPath}`,
-  ];
+  const candidates = window.location.protocol === "file:"
+    ? [`./public/${cleanPath}`, `./${cleanPath}`, `/public/${cleanPath}`, `/${cleanPath}`]
+    : [`./${cleanPath}`, `/${cleanPath}`, `./public/${cleanPath}`, `/public/${cleanPath}`];
+  return [...new Set(candidates)];
 }
 
 async function fetchRuntimeJson(path) {
@@ -471,25 +470,17 @@ function toggleVariantAnnotation() {
 }
 
 async function loadDatabase() {
-  setLoading("装载中");
-  const [db, conversion] = await Promise.all([
-    fetchRuntimeJson(DATA_PATH),
-    fetchRuntimeJson(HAN_CONVERSION_PATH),
-  ]);
+  setLoading("载入电码");
+  const db = await fetchRuntimeJson(DATA_PATH);
   state.db = db;
-  state.hanConversion = conversion;
   const forwardCount = Object.keys(state.db.forward || {}).length;
   const reverseCount = Object.keys(state.db.reverse || {}).length;
   setLoading(`${forwardCount} 字`);
   els.summary.textContent = `已载入 ${forwardCount} 字，${reverseCount} 组电码`;
 }
 
-function convertHanVariant(text) {
-  const conversion = state.hanConversion?.[els.hanConversion?.value] || {};
-  if (!Object.keys(conversion).length) {
-    return text;
-  }
-  return Array.from(text, (char) => conversion[char] || char).join("");
+async function convertHanVariant(text) {
+  return convertHanText(text, els.hanConversion?.value);
 }
 
 function toFullwidth(text) {
@@ -515,10 +506,10 @@ function convertWidth(text) {
   return text;
 }
 
-function normalizeInputText(text) {
+async function normalizeInputText(text) {
   let normalized = convertWidth(text);
   if (state.mode === "encode") {
-    normalized = convertHanVariant(normalized);
+    normalized = await convertHanVariant(normalized);
   }
   return normalized;
 }
@@ -869,11 +860,24 @@ function renderPaper(entries) {
   els.paperGrid.append(fragment);
 }
 
-function refresh() {
+async function refresh() {
+  const refreshVersion = ++state.refreshVersion;
   if (!state.db) {
     return;
   }
-  const text = normalizeInputText(els.sourceText.value);
+  let text = "";
+  try {
+    text = await normalizeInputText(els.sourceText.value);
+  } catch (error) {
+    if (refreshVersion !== state.refreshVersion) {
+      return;
+    }
+    setGlobalAlert(`简繁转换加载失败：${error.message}`);
+    return;
+  }
+  if (refreshVersion !== state.refreshVersion) {
+    return;
+  }
   if (!text.trim()) {
     state.entries = [];
     state.plainCodes = "";

@@ -7,6 +7,7 @@ const root = resolve(".");
 const distRoot = resolve(root, "dist");
 const siteRoot = existsSync(distRoot) ? distRoot : root;
 const publicRoot = resolve(root, "public");
+const nodeModulesRoot = resolve(root, "..", "..", "node_modules");
 const port = Number(process.env.PORT || 4173);
 
 const mimeTypes = {
@@ -41,6 +42,20 @@ function resolvePublicRequestPath(url) {
   return absolutePath;
 }
 
+function resolveNodeModulesRequestPath(url) {
+  const { pathname } = new URL(url, `http://127.0.0.1:${port}`);
+  const cleanPath = decodeURIComponent(pathname).replace(/^\/+/, "");
+  if (!cleanPath.startsWith("node_modules/")) {
+    return null;
+  }
+  const modulePath = cleanPath.replace(/^node_modules\//, "");
+  const absolutePath = resolve(nodeModulesRoot, normalize(modulePath));
+  if (!absolutePath.startsWith(nodeModulesRoot)) {
+    return null;
+  }
+  return absolutePath;
+}
+
 const server = createServer(async (request, response) => {
   const filePath = resolveRequestPath(request.url || "/");
   if (!filePath) {
@@ -54,12 +69,17 @@ const server = createServer(async (request, response) => {
     const publicPath = resolvePublicRequestPath(request.url || "/");
     if (publicPath && existsSync(publicPath)) {
       target = publicPath;
-    } else if (extname(filePath)) {
-      response.writeHead(404);
-      response.end("Not found");
-      return;
     } else {
-      target = resolve(siteRoot, "index.html");
+      const nodeModulesPath = resolveNodeModulesRequestPath(request.url || "/");
+      if (nodeModulesPath && existsSync(nodeModulesPath)) {
+        target = nodeModulesPath;
+      } else if (extname(filePath)) {
+        response.writeHead(404);
+        response.end("Not found");
+        return;
+      } else {
+        target = resolve(siteRoot, "index.html");
+      }
     }
   }
 

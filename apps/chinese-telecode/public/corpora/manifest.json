@@ -12,21 +12,21 @@
       "file": "Chinese/狂人日记_节选.txt",
       "group": "Chinese",
       "mode": "encode",
-      "bytes": 349
+      "bytes": 348
     },
     {
       "title": "千字文 繁体",
       "file": "Chinese/千字文_繁体.txt",
       "group": "Chinese",
       "mode": "encode",
-      "bytes": 3761
+      "bytes": 3760
     },
     {
       "title": "千字文 简体",
       "file": "Chinese/千字文_简体.txt",
       "group": "Chinese",
       "mode": "encode",
-      "bytes": 3761
+      "bytes": 3760
     },
     {
       "title": "沁园春·雪",
@@ -61,7 +61,7 @@
       "file": "Chinese/自提小像_简体.txt",
       "group": "Chinese",
       "mode": "encode",
-      "bytes": 122
+      "bytes": 119
     },
     {
       "title": "答司马谏议书 简体",
