@@ -46,16 +46,46 @@ body {
     box-sizing: border-box;
 }
 
-h2 {
-    margin-top: 0;
-    color: #333;
-    font-size: 20px;
+.card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
     border-bottom: 2px solid #eee;
     padding-bottom: 12px;
 }
 
+h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+    color: #333;
+    font-size: 20px;
+    line-height: 1.35;
+}
+
+.language-toggle {
+    flex: 0 0 auto;
+    min-width: 44px;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid #d4d4d8;
+    border-radius: 6px;
+    background: #fff;
+    color: #111827;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.language-toggle:hover {
+    background: #f4f4f5;
+    border-color: #a1a1aa;
+}
+
 .form-group {
-    margin-bottom: 18px;
+    margin-top: 18px;
+    margin-bottom: 0;
 }
 
 .input-action-row {
@@ -88,7 +118,7 @@ h2 {
 }
 
 .advanced-options {
-    margin-top: 10px;
+    margin-top: 18px;
     padding: 16px;
     border: 1px solid #ececec;
     border-radius: 8px;
@@ -418,6 +448,10 @@ canvas {
 
     h2 {
         font-size: 18px;
+    }
+
+    .card-header {
+        align-items: center;
     }
 
     .intro {

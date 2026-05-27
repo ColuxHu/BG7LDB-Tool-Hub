@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>行李牌生成器 | BG7LDB Tool Hub</title>
+    <title data-i18n="pageTitle">行李牌生成器 | BG7LDB Tool Hub</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <link rel="stylesheet" href="styles.css">
@@ -13,68 +13,75 @@
 <body>
 
     <div class="card">
-        <h2>🧳 三色墨水屏行李牌生成</h2>
+        <div class="card-header">
+            <h2 data-i18n="heading">🧳 三色墨水屏行李牌生成</h2>
+            <button type="button" class="language-toggle" id="languageToggle" onclick="toggleLanguage()"
+                aria-label="Switch to English">EN</button>
+        </div>
 
         <div class="form-group">
-            <label for="ownerId">所有者标识</label>
+            <label for="ownerId" data-i18n="ownerLabel">所有者标识</label>
             <input type="text" id="ownerId" value="BG7LDB">
         </div>
 
         <div class="form-group">
-            <label for="scanText">扫码提示文案</label>
+            <label for="scanText" data-i18n="scanTextLabel">扫码提示文案</label>
             <input type="text" id="scanText" value="SCAN TO ADD WECHAT >">
         </div>
 
         <div class="form-group">
-            <label for="qrData">二维码数据</label>
+            <label for="qrData" data-i18n="qrDataLabel">二维码数据</label>
             <div class="input-action-row">
                 <input type="text" id="qrData" value="Hello, world!">
-                <button type="button" class="btn btn-scan" onclick="openQrImagePicker()">选择扫描二维码</button>
+                <button type="button" class="btn btn-scan" onclick="openQrImagePicker()"
+                    data-i18n="scanButton">选择扫描二维码</button>
             </div>
             <input type="file" id="qrImageInput" class="hidden-file-input" accept="image/*"
                 onchange="handleQrImageSelected(event)">
         </div>
 
         <details class="advanced-options">
-            <summary>高级选项</summary>
+            <summary data-i18n="advancedOptions">高级选项</summary>
             <div class="form-group">
-                <label for="fontChoice">字体 <span class="font-notice">(开源字体支持：<a
+                <label for="fontChoice"><span data-i18n="fontLabel">字体</span> <span class="font-notice">(<span
+                            data-i18n="fontNoticePrefix">开源字体支持：</span><a
                             href="https://github.com/TakWolf/fusion-pixel-font" target="_blank"
                             rel="noopener noreferrer">Fusion Pixel Font</a>)</span></label>
                 <select id="fontChoice">
-                    <option value="PixelFontZHHans" selected>简体中文</option>
-                    <option value="PixelFontZHHant">繁体中文</option>
-                    <option value="PixelFontLatin">英文</option>
-                    <option value="PixelFontJA">日文</option>
-                    <option value="PixelFontKO">朝鲜文</option>
+                    <option value="PixelFontZHHans" selected data-i18n="fontZHHans">简体中文</option>
+                    <option value="PixelFontZHHant" data-i18n="fontZHHant">繁体中文</option>
+                    <option value="PixelFontLatin" data-i18n="fontLatin">英文</option>
+                    <option value="PixelFontJA" data-i18n="fontJA">日文</option>
+                    <option value="PixelFontKO" data-i18n="fontKO">朝鲜文</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="topThanksText">上方感谢词</label>
+                <label for="topThanksText" data-i18n="topThanksLabel">上方感谢词</label>
                 <input type="text" id="topThanksText" value="THANKS FOR YOUR HELP">
             </div>
             <div class="form-group">
-                <label for="bottomThanksText">下方感谢词</label>
+                <label for="bottomThanksText" data-i18n="bottomThanksLabel">下方感谢词</label>
                 <input type="text" id="bottomThanksText" value="非常感谢您的帮助">
             </div>
         </details>
 
-        <button class="btn btn-generate" onclick="generateTag()">实时预览</button>
+        <button class="btn btn-generate" onclick="generateTag()" data-i18n="generateButton">实时预览</button>
 
         <div class="preview-container">
-            <canvas id="tagCanvas" width="250" height="122" role="img" aria-label="行李牌预览"></canvas>
+            <canvas id="tagCanvas" width="250" height="122" role="img" aria-label="行李牌预览"
+                data-i18n-attr="aria-label:canvasLabel"></canvas>
         </div>
 
         <div class="btn-group">
-            <button class="btn btn-download" onclick="downloadImage()">保存图片</button>
-            <button class="btn btn-ble" id="btnBle" onclick="connectAndFlash()">蓝牙直刷</button>
+            <button class="btn btn-download" onclick="downloadImage()" data-i18n="downloadButton">保存图片</button>
+            <button class="btn btn-ble" id="btnBle" onclick="connectAndFlash()" data-i18n="bleButton">蓝牙直刷</button>
         </div>
 
-        <div class="status-bar"><b>状态：</b><span id="status"></span></div>
+        <div class="status-bar"><b data-i18n="statusLabel">状态：</b><span id="status"></span></div>
         <div class="feedback-panel">
             <div class="feedback-header">
-                <span>反馈区</span>
-                <button type="button" onclick="clearLog()">清空日志</button>
+                <span data-i18n="feedbackTitle">反馈区</span>
+                <button type="button" onclick="clearLog()" data-i18n="clearLogButton">清空日志</button>
             </div>
             <div id="log"></div>
         </div>

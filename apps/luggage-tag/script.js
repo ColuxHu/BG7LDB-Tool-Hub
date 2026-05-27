@@ -6,14 +6,210 @@ const FONT_FALLBACKS = {
     PixelFontKO: '"PixelFontKO", "PixelFontZHHans", "PixelFontLatin", sans-serif'
 };
 
+const LANGUAGE_STORAGE_KEY = 'luggageTagLanguage';
+const SUPPORTED_LANGUAGES = ['zh-CN', 'en'];
+let currentLanguage = getSavedLanguage();
+
+const I18N = {
+    'zh-CN': {
+        pageTitle: '行李牌生成器 | BG7LDB Tool Hub',
+        heading: '🧳 三色墨水屏行李牌生成',
+        languageButton: 'EN',
+        languageButtonLabel: 'Switch to English',
+        ownerLabel: '所有者标识',
+        scanTextLabel: '扫码提示文案',
+        qrDataLabel: '二维码数据',
+        scanButton: '选择扫描二维码',
+        advancedOptions: '高级选项',
+        fontLabel: '字体',
+        fontNoticePrefix: '开源字体支持：',
+        fontZHHans: '简体中文',
+        fontZHHant: '繁体中文',
+        fontLatin: '英文',
+        fontJA: '日文',
+        fontKO: '朝鲜文',
+        topThanksLabel: '上方感谢词',
+        bottomThanksLabel: '下方感谢词',
+        generateButton: '实时预览',
+        canvasLabel: '行李牌预览',
+        downloadButton: '保存图片',
+        bleButton: '蓝牙直刷',
+        bleDisconnectedButton: '蓝牙断开',
+        connectingButton: '正在连接...',
+        initButton: '初始化设备...',
+        extractPixelsButton: '提取像素...',
+        refreshButton: '刷新屏幕...',
+        successButton: '刷写成功！',
+        bwLayer: '黑白',
+        redLayer: '红色',
+        dataProgress: '数据',
+        statusLabel: '状态：',
+        feedbackTitle: '反馈区',
+        clearLogButton: '清空日志',
+        readyLog: '系统已就绪，可开始生成或刷写。',
+        imageSaved: '图片已保存为: {filename}',
+        qrGeneratingFailed: '二维码生成失败:',
+        qrRecognizing: '二维码识别中...',
+        qrStart: '开始识别二维码图片: {filename}',
+        qrInputMissing: '未找到二维码数据输入框',
+        qrDone: '二维码识别完成',
+        qrSuccess: '二维码识别成功，已写入数据: {text}',
+        qrFailed: '二维码识别失败',
+        qrFailedWithMessage: '二维码识别失败: {message}',
+        qrFailedAlert: '二维码识别失败：{message}',
+        imageLoadFailed: '图片加载失败',
+        qrLibMissing: '二维码识别库未加载，请检查网络后重试',
+        qrCanvasFailed: '无法创建二维码识别画布',
+        qrRetryBlur: '原图识别失败，尝试轻度点阵融合。',
+        qrRetryMorph: '继续尝试形态学增强识别。',
+        qrRetryGray: '继续尝试灰度高阈值提纯识别。',
+        qrNoResult: '未能识别，可能是由于二维码变形严重、过于模糊或中心遮挡面积超出了容错率。',
+        writeNoCharacteristic: '写入失败：未找到可用的特征值。',
+        writeException: '写入异常: {message}',
+        gattDisconnected: 'GATT 连接已断开。',
+        bluetoothDisconnectedStatus: '蓝牙已断开',
+        bluetoothUnsupportedAlert: '当前浏览器不支持 Web Bluetooth API，请使用 Chrome/Edge，并确保是 HTTPS 环境。',
+        bluetoothUnsupportedLog: '当前浏览器不支持 Web Bluetooth API。',
+        choosingDeviceStatus: '正在选择设备',
+        chooseDeviceLog: '开始选择蓝牙设备。',
+        deviceSelected: '设备已选择: {name}',
+        unknownDevice: '未知设备',
+        invalidDeviceAlert: '请连接 NRF 系列设备（设备名以 NRF 开头），当前设备不符合要求。',
+        invalidDeviceLog: '设备名称校验失败，流程中止。',
+        sessionParams: '会话参数: mtu={mtu}, interleavedCount={interleavedCount}',
+        disconnectListenerWarn: '无法注册断连事件',
+        connectingGattStatus: '正在连接 GATT',
+        gattAttempt: '连接 GATT 尝试 {attempt}/4',
+        gattConnected: 'GATT 连接成功。',
+        gattConnectFailed: '无法连接到 GATT Server，请重试连接',
+        epdServiceFound: '已发现 EPD Service。',
+        characteristicFound: '已发现写入 Characteristic。',
+        notificationsStarted: '通知已开启，开始监听 MTU。',
+        mtuAdjusted: '设备反馈：MTU 自动调整为 {mtu}',
+        notificationParseFailed: '通知解析失败: {message}',
+        notificationEnableFailed: '无法启用通知: {message}',
+        initStatus: '初始化设备',
+        sendInit: '发送 INIT 指令 (0x01)。',
+        imageDataStatus: '生成图像数据',
+        canvasExtractStart: '开始提取 Canvas 像素并转换。',
+        imageConvertDone: '图像转换完成：黑白层 {bw}B，红色层 {red}B',
+        refreshStatus: '刷新屏幕中',
+        sendRefresh: '数据发送完成，触发 REFRESH (0x05)。',
+        sendDoneStatus: '发送完成',
+        flashDone: '刷写流程完成。',
+        flashFailed: '蓝牙刷写失败: {message}',
+        failedStatus: '失败',
+        flashFailedAlert: '蓝牙刷写中止或失败: {message}',
+        sendLayerStart: '开始发送{layer}层，总大小 {size}B，分块 {chunkSize}B',
+        chunkWriteInterrupted: '数据块写入中断: {message}',
+        layerSendDone: '{layer}层发送完成，共 {totalChunks} 包'
+    },
+    en: {
+        pageTitle: 'Luggage Tag Generator | BG7LDB Tool Hub',
+        heading: '🧳 Tri-color E-paper Luggage Tag',
+        languageButton: '中',
+        languageButtonLabel: '切换到中文',
+        ownerLabel: 'Owner ID',
+        scanTextLabel: 'Scan prompt text',
+        qrDataLabel: 'QR code data',
+        scanButton: 'Scan QR image',
+        advancedOptions: 'Advanced options',
+        fontLabel: 'Font',
+        fontNoticePrefix: 'Open-source font: ',
+        fontZHHans: 'Simplified Chinese',
+        fontZHHant: 'Traditional Chinese',
+        fontLatin: 'English',
+        fontJA: 'Japanese',
+        fontKO: 'Korean',
+        topThanksLabel: 'Top thank-you text',
+        bottomThanksLabel: 'Bottom thank-you text',
+        generateButton: 'Live preview',
+        canvasLabel: 'Luggage tag preview',
+        downloadButton: 'Save image',
+        bleButton: 'Flash via Bluetooth',
+        bleDisconnectedButton: 'Bluetooth disconnected',
+        connectingButton: 'Connecting...',
+        initButton: 'Initializing...',
+        extractPixelsButton: 'Extracting pixels...',
+        refreshButton: 'Refreshing screen...',
+        successButton: 'Flash complete!',
+        bwLayer: 'B/W',
+        redLayer: 'red',
+        dataProgress: ' data',
+        statusLabel: 'Status: ',
+        feedbackTitle: 'Feedback',
+        clearLogButton: 'Clear log',
+        readyLog: 'System ready. You can generate or flash now.',
+        imageSaved: 'Image saved as: {filename}',
+        qrGeneratingFailed: 'QR code generation failed:',
+        qrRecognizing: 'Recognizing QR code...',
+        qrStart: 'Reading QR image: {filename}',
+        qrInputMissing: 'QR data input was not found',
+        qrDone: 'QR code recognized',
+        qrSuccess: 'QR code recognized and written to data: {text}',
+        qrFailed: 'QR recognition failed',
+        qrFailedWithMessage: 'QR recognition failed: {message}',
+        qrFailedAlert: 'QR recognition failed: {message}',
+        imageLoadFailed: 'Image failed to load',
+        qrLibMissing: 'QR recognition library is not loaded. Check the network and try again.',
+        qrCanvasFailed: 'Unable to create QR recognition canvas',
+        qrRetryBlur: 'Original image failed. Trying light pixel blur.',
+        qrRetryMorph: 'Trying enhanced morphology recognition.',
+        qrRetryGray: 'Trying grayscale high-threshold cleanup.',
+        qrNoResult: 'Unable to recognize the QR code. It may be badly distorted, too blurry, or blocked beyond the error-correction limit.',
+        writeNoCharacteristic: 'Write failed: no available characteristic found.',
+        writeException: 'Write error: {message}',
+        gattDisconnected: 'GATT connection disconnected.',
+        bluetoothDisconnectedStatus: 'Bluetooth disconnected',
+        bluetoothUnsupportedAlert: 'This browser does not support Web Bluetooth. Use Chrome/Edge and make sure the page is served over HTTPS.',
+        bluetoothUnsupportedLog: 'This browser does not support Web Bluetooth.',
+        choosingDeviceStatus: 'Selecting device',
+        chooseDeviceLog: 'Starting Bluetooth device selection.',
+        deviceSelected: 'Device selected: {name}',
+        unknownDevice: 'Unknown device',
+        invalidDeviceAlert: 'Please connect an NRF-series device whose name starts with NRF.',
+        invalidDeviceLog: 'Device name validation failed. Flow stopped.',
+        sessionParams: 'Session params: mtu={mtu}, interleavedCount={interleavedCount}',
+        disconnectListenerWarn: 'Unable to register disconnect listener',
+        connectingGattStatus: 'Connecting GATT',
+        gattAttempt: 'GATT connection attempt {attempt}/4',
+        gattConnected: 'GATT connected.',
+        gattConnectFailed: 'Unable to connect to GATT Server. Please try again.',
+        epdServiceFound: 'EPD Service found.',
+        characteristicFound: 'Write Characteristic found.',
+        notificationsStarted: 'Notifications started. Listening for MTU.',
+        mtuAdjusted: 'Device feedback: MTU automatically adjusted to {mtu}',
+        notificationParseFailed: 'Notification parse failed: {message}',
+        notificationEnableFailed: 'Unable to enable notifications: {message}',
+        initStatus: 'Initializing device',
+        sendInit: 'Sending INIT command (0x01).',
+        imageDataStatus: 'Generating image data',
+        canvasExtractStart: 'Extracting Canvas pixels and converting.',
+        imageConvertDone: 'Image converted: B/W layer {bw}B, red layer {red}B',
+        refreshStatus: 'Refreshing screen',
+        sendRefresh: 'Data sent. Triggering REFRESH (0x05).',
+        sendDoneStatus: 'Send complete',
+        flashDone: 'Flash flow complete.',
+        flashFailed: 'Bluetooth flash failed: {message}',
+        failedStatus: 'Failed',
+        flashFailedAlert: 'Bluetooth flash was interrupted or failed: {message}',
+        sendLayerStart: 'Sending {layer} layer, total {size}B, chunk {chunkSize}B',
+        chunkWriteInterrupted: 'Data chunk write interrupted: {message}',
+        layerSendDone: '{layer} layer sent, {totalChunks} packets total'
+    }
+};
+
 window.onload = async () => {
+    applyLanguage();
     await ensureInitialFontReady();
     generateTag();
-    addLog('系统已就绪，可开始生成或刷写。', 'OK', 'SYS');
+    addLog(t('readyLog'), 'OK', 'SYS');
 };
 
 // 更新 summary 的 aria-expanded 状态（便于无障碍设备识别）
 document.addEventListener('DOMContentLoaded', () => {
+    applyLanguage();
+
     document.querySelectorAll('.advanced-options').forEach(details => {
         const summary = details.querySelector('summary');
         if (!summary) return;
@@ -24,6 +220,60 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+function getSavedLanguage() {
+    try {
+        const saved = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+        if (SUPPORTED_LANGUAGES.includes(saved)) return saved;
+    } catch (error) {
+        // localStorage can be unavailable in some embedded browser contexts.
+    }
+    return 'zh-CN';
+}
+
+function t(key, values = {}) {
+    const dictionary = I18N[currentLanguage] || I18N['zh-CN'];
+    let text = dictionary[key] || I18N['zh-CN'][key] || key;
+    Object.entries(values).forEach(([name, value]) => {
+        text = text.replaceAll(`{${name}}`, value);
+    });
+    return text;
+}
+
+function applyLanguage() {
+    document.documentElement.lang = currentLanguage;
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        element.textContent = t(element.dataset.i18n);
+    });
+    document.querySelectorAll('[data-i18n-attr]').forEach(element => {
+        element.dataset.i18nAttr.split(';').forEach(binding => {
+            const [attribute, key] = binding.split(':').map(part => part && part.trim());
+            if (attribute && key) element.setAttribute(attribute, t(key));
+        });
+    });
+
+    const toggle = document.getElementById('languageToggle');
+    if (toggle) {
+        toggle.textContent = t('languageButton');
+        toggle.setAttribute('aria-label', t('languageButtonLabel'));
+        toggle.title = t('languageButtonLabel');
+    }
+
+    const status = document.getElementById('status');
+    if (status && status.dataset.statusKey) {
+        status.textContent = t(status.dataset.statusKey);
+    }
+}
+
+function toggleLanguage() {
+    currentLanguage = currentLanguage === 'zh-CN' ? 'en' : 'zh-CN';
+    try {
+        localStorage.setItem(LANGUAGE_STORAGE_KEY, currentLanguage);
+    } catch (error) {
+        // Language switching still works for the current page load.
+    }
+    applyLanguage();
+}
 
 async function ensureInitialFontReady() {
     const fontChoice = document.getElementById('fontChoice');
@@ -142,7 +392,7 @@ function generateTag() {
             }
         }
     } catch (err) {
-        console.error("二维码生成失败:", err);
+        console.error(t('qrGeneratingFailed'), err);
     }
 }
 
@@ -171,7 +421,7 @@ function downloadImage() {
     link.href = dataUrl;
     link.click();
 
-    addLog(`图片已保存为: ${link.download}`, 'OK', 'FILE');
+    addLog(t('imageSaved', { filename: link.download }), 'OK', 'FILE');
 }
 
 function openQrImagePicker() {
@@ -186,26 +436,26 @@ async function handleQrImageSelected(event) {
     const file = event.target.files && event.target.files[0];
     if (!file) return;
 
-    setStatus('二维码识别中...');
-    addLog(`开始识别二维码图片: ${file.name}`, 'INFO', 'QR');
+    setStatus('qrRecognizing');
+    addLog(t('qrStart', { filename: file.name }), 'INFO', 'QR');
 
     try {
         const qrText = await decodeQrCodeFromFile(file);
         const qrDataInput = document.getElementById('qrData');
         if (!qrDataInput) {
-            throw new Error('未找到二维码数据输入框');
+            throw new Error(t('qrInputMissing'));
         }
 
         qrDataInput.value = qrText;
         generateTag();
 
-        setStatus('二维码识别完成');
-        addLog(`二维码识别成功，已写入数据: ${qrText}`, 'OK', 'QR');
+        setStatus('qrDone');
+        addLog(t('qrSuccess', { text: qrText }), 'OK', 'QR');
     } catch (error) {
         console.error(error);
-        setStatus('二维码识别失败');
-        addLog(`二维码识别失败: ${error.message || error}`, 'ERROR', 'QR');
-        alert('二维码识别失败：' + (error.message || error));
+        setStatus('qrFailed');
+        addLog(t('qrFailedWithMessage', { message: error.message || error }), 'ERROR', 'QR');
+        alert(t('qrFailedAlert', { message: error.message || error }));
     }
 }
 
@@ -221,7 +471,7 @@ function loadImageFromFile(file) {
 
         image.onerror = () => {
             URL.revokeObjectURL(objectUrl);
-            reject(new Error('图片加载失败'));
+            reject(new Error(t('imageLoadFailed')));
         };
 
         image.src = objectUrl;
@@ -230,7 +480,7 @@ function loadImageFromFile(file) {
 
 async function decodeQrCodeFromFile(file) {
     if (!window.jsQR) {
-        throw new Error('二维码识别库未加载，请检查网络后重试');
+        throw new Error(t('qrLibMissing'));
     }
 
     const image = await loadImageFromFile(file);
@@ -238,7 +488,7 @@ async function decodeQrCodeFromFile(file) {
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
     if (!ctx) {
-        throw new Error('无法创建二维码识别画布');
+        throw new Error(t('qrCanvasFailed'));
     }
 
     canvas.width = image.width;
@@ -258,31 +508,33 @@ async function decodeQrCodeFromFile(file) {
     let qrCode = tryDecode('none');
 
     if (!qrCode || !qrCode.data) {
-        addLog('原图识别失败，尝试轻度点阵融合。', 'WARN', 'QR');
+        addLog(t('qrRetryBlur'), 'WARN', 'QR');
         qrCode = tryDecode('blur(4px)');
     }
 
     if (!qrCode || !qrCode.data) {
-        addLog('继续尝试形态学增强识别。', 'WARN', 'QR');
+        addLog(t('qrRetryMorph'), 'WARN', 'QR');
         qrCode = tryDecode('blur(6px) contrast(200%)');
     }
 
     if (!qrCode || !qrCode.data) {
-        addLog('继续尝试灰度高阈值提纯识别。', 'WARN', 'QR');
+        addLog(t('qrRetryGray'), 'WARN', 'QR');
         qrCode = tryDecode('grayscale(100%) contrast(300%) blur(4px)');
     }
 
     if (!qrCode || !qrCode.data) {
-        throw new Error('未能识别，可能是由于二维码变形严重、过于模糊或中心遮挡面积超出了容错率。');
+        throw new Error(t('qrNoResult'));
     }
 
     return qrCode.data;
 }
 
-function setStatus(text) {
+function setStatus(statusKeyOrText, values = {}) {
     const status = document.getElementById('status');
     if (status) {
-        status.textContent = text;
+        const hasTranslation = Boolean((I18N[currentLanguage] && I18N[currentLanguage][statusKeyOrText]) || I18N['zh-CN'][statusKeyOrText]);
+        status.dataset.statusKey = hasTranslation ? statusKeyOrText : '';
+        status.textContent = hasTranslation ? t(statusKeyOrText, values) : statusKeyOrText;
     }
 }
 
@@ -356,7 +608,7 @@ function hex2bytes(hex) {
 
 async function write(cmd, data = null, withResponse = true) {
     if (!bleChar) {
-        addLog('写入失败：未找到可用的特征值。', 'ERROR', 'BLE');
+        addLog(t('writeNoCharacteristic'), 'ERROR', 'BLE');
         throw new Error('Characteristic not available');
     }
     let payloadArr = [cmd];
@@ -374,7 +626,7 @@ async function write(cmd, data = null, withResponse = true) {
             await bleChar.writeValueWithoutResponse(payload);
         }
     } catch (e) {
-        addLog('写入异常: ' + (e.message || e), 'ERROR', 'BLE');
+        addLog(t('writeException', { message: e.message || e }), 'ERROR', 'BLE');
         throw e;
     }
     return true;
@@ -387,11 +639,11 @@ let bleDevice = null;
 
 function handleGattDisconnected(event) {
     console.warn('GATT Server disconnected');
-    addLog('GATT 连接已断开。', 'WARN', 'BLE');
-    setStatus('蓝牙已断开');
+    addLog(t('gattDisconnected'), 'WARN', 'BLE');
+    setStatus('bluetoothDisconnectedStatus');
     const btn = document.getElementById('btnBle');
     if (btn) {
-        btn.innerHTML = '蓝牙断开';
+        btn.innerHTML = t('bleDisconnectedButton');
         btn.disabled = false;
     }
     bleChar = null;
@@ -403,48 +655,48 @@ async function connectAndFlash() {
     const btn = document.getElementById('btnBle');
 
     if (!navigator.bluetooth) {
-        alert("当前浏览器不支持 Web Bluetooth API，请使用 Chrome/Edge，并确保是 HTTPS 环境。");
-        addLog('当前浏览器不支持 Web Bluetooth API。', 'ERROR', 'BLE');
+        alert(t('bluetoothUnsupportedAlert'));
+        addLog(t('bluetoothUnsupportedLog'), 'ERROR', 'BLE');
         return;
     }
 
-    btn.innerText = '正在连接...';
+    btn.innerText = t('connectingButton');
     btn.disabled = true;
-    setStatus('正在选择设备');
-    addLog('开始选择蓝牙设备。', 'INFO', 'BLE');
+    setStatus('choosingDeviceStatus');
+    addLog(t('chooseDeviceLog'), 'INFO', 'BLE');
 
     try {
         bleDevice = await navigator.bluetooth.requestDevice({
             filters: [{ namePrefix: 'NRF' }],
             optionalServices: ['62750001-d828-918d-fb46-b6c11c675aec']
         });
-        addLog(`设备已选择: ${bleDevice.name || '未知设备'}`, 'OK', 'BLE');
+        addLog(t('deviceSelected', { name: bleDevice.name || t('unknownDevice') }), 'OK', 'BLE');
 
         if (!(bleDevice && bleDevice.name && bleDevice.name.startsWith('NRF'))) {
-            alert('请连接 NRF 系列设备（设备名以 NRF 开头），当前设备不符合要求。');
-            addLog('设备名称校验失败，流程中止。', 'WARN', 'BLE');
-            btn.innerHTML = '蓝牙直刷';
+            alert(t('invalidDeviceAlert'));
+            addLog(t('invalidDeviceLog'), 'WARN', 'BLE');
+            btn.innerHTML = t('bleButton');
             btn.disabled = false;
             return;
         }
 
-        addLog(`会话参数: mtu=${mtuSize}, interleavedCount=${interleavedCount}`, 'INFO', 'BLE');
+        addLog(t('sessionParams', { mtu: mtuSize, interleavedCount }), 'INFO', 'BLE');
 
         try {
             bleDevice.addEventListener('gattserverdisconnected', handleGattDisconnected);
         } catch (e) {
-            console.warn('无法注册断连事件', e);
+            console.warn(t('disconnectListenerWarn'), e);
         }
 
-        setStatus('正在连接 GATT');
+        setStatus('connectingGattStatus');
         let server = null;
         let connectError = null;
         for (let attempt = 0; attempt < 4; attempt++) {
             try {
-                addLog(`连接 GATT 尝试 ${attempt + 1}/4`, 'INFO', 'BLE');
+                addLog(t('gattAttempt', { attempt: attempt + 1 }), 'INFO', 'BLE');
                 server = await bleDevice.gatt.connect();
                 if (server && server.connected) {
-                    addLog('GATT 连接成功。', 'OK', 'BLE');
+                    addLog(t('gattConnected'), 'OK', 'BLE');
                     connectError = null;
                     break;
                 }
@@ -454,17 +706,17 @@ async function connectAndFlash() {
             await new Promise(r => setTimeout(r, 400));
         }
         if (!server || !server.connected) {
-            throw new Error(connectError && connectError.message ? connectError.message : '无法连接到 GATT Server，请重试连接');
+            throw new Error(connectError && connectError.message ? connectError.message : t('gattConnectFailed'));
         }
 
         const service = await server.getPrimaryService('62750001-d828-918d-fb46-b6c11c675aec');
-        addLog('已发现 EPD Service。', 'OK', 'BLE');
+        addLog(t('epdServiceFound'), 'OK', 'BLE');
         bleChar = await service.getCharacteristic('62750002-d828-918d-fb46-b6c11c675aec');
-        addLog('已发现写入 Characteristic。', 'OK', 'BLE');
+        addLog(t('characteristicFound'), 'OK', 'BLE');
 
         try {
             await bleChar.startNotifications();
-            addLog('通知已开启，开始监听 MTU。', 'OK', 'BLE');
+            addLog(t('notificationsStarted'), 'OK', 'BLE');
             bleChar.addEventListener('characteristicvaluechanged', (event) => {
                 try {
                     const msg = textDecoder.decode(event.target.value);
@@ -472,54 +724,54 @@ async function connectAndFlash() {
                         const m = parseInt(msg.substring(4));
                         if (!isNaN(m) && m > 0) {
                             mtuSize = m;
-                            addLog(`设备反馈：MTU 自动调整为 ${mtuSize}`, 'INFO', 'BLE');
+                            addLog(t('mtuAdjusted', { mtu: mtuSize }), 'INFO', 'BLE');
                         }
                     }
                 } catch (e) {
-                    addLog(`通知解析失败: ${e.message || e}`, 'WARN', 'BLE');
+                    addLog(t('notificationParseFailed', { message: e.message || e }), 'WARN', 'BLE');
                 }
             });
         } catch (e) {
-            addLog(`无法启用通知: ${e.message || e}`, 'WARN', 'BLE');
+            addLog(t('notificationEnableFailed', { message: e.message || e }), 'WARN', 'BLE');
         }
 
-        btn.innerText = '初始化设备...';
-        setStatus('初始化设备');
-        addLog('发送 INIT 指令 (0x01)。', 'INFO', 'BLE');
+        btn.innerText = t('initButton');
+        setStatus('initStatus');
+        addLog(t('sendInit'), 'INFO', 'BLE');
         await write(EpdCmd.INIT);
         await new Promise(r => setTimeout(r, 200));
 
-        btn.innerText = '提取像素...';
-        setStatus('生成图像数据');
-        addLog('开始提取 Canvas 像素并转换。', 'INFO', 'IMG');
+        btn.innerText = t('extractPixelsButton');
+        setStatus('imageDataStatus');
+        addLog(t('canvasExtractStart'), 'INFO', 'IMG');
         await new Promise(r => setTimeout(r, 50));
 
         const { bwData, redData } = processCanvasToEink();
-        addLog(`图像转换完成：黑白层 ${bwData.length}B，红色层 ${redData.length}B`, 'OK', 'IMG');
+        addLog(t('imageConvertDone', { bw: bwData.length, red: redData.length }), 'OK', 'IMG');
 
         await sendImageData(bwData, 'bw', btn);
         await sendImageData(redData, 'red', btn);
 
-        btn.innerText = '刷新屏幕...';
-        setStatus('刷新屏幕中');
-        addLog('数据发送完成，触发 REFRESH (0x05)。', 'INFO', 'BLE');
+        btn.innerText = t('refreshButton');
+        setStatus('refreshStatus');
+        addLog(t('sendRefresh'), 'INFO', 'BLE');
         await write(EpdCmd.REFRESH);
 
-        btn.innerText = '刷写成功！';
-        setStatus('发送完成');
-        addLog('刷写流程完成。', 'OK', 'BLE');
+        btn.innerText = t('successButton');
+        setStatus('sendDoneStatus');
+        addLog(t('flashDone'), 'OK', 'BLE');
 
         setTimeout(() => {
-            btn.innerHTML = '蓝牙直刷';
+            btn.innerHTML = t('bleButton');
             btn.disabled = false;
         }, 4000);
 
     } catch (err) {
         console.error(err);
-        addLog(`蓝牙刷写失败: ${err.message}`, 'ERROR', 'BLE');
-        setStatus('失败');
-        alert('蓝牙刷写中止或失败: ' + err.message);
-        btn.innerHTML = '蓝牙直刷';
+        addLog(t('flashFailed', { message: err.message }), 'ERROR', 'BLE');
+        setStatus('failedStatus');
+        alert(t('flashFailedAlert', { message: err.message }));
+        btn.innerHTML = t('bleButton');
         btn.disabled = false;
     }
 }
@@ -574,7 +826,8 @@ async function sendImageData(data, type, btn) {
     let noReplyCount = interleavedCount;
     const totalChunks = Math.ceil(data.length / chunkSize);
 
-    addLog(`开始发送${type === 'bw' ? '黑白' : '红色'}层，总大小 ${data.length}B，分块 ${chunkSize}B`, 'INFO', 'TX');
+    const layerName = type === 'bw' ? t('bwLayer') : t('redLayer');
+    addLog(t('sendLayerStart', { layer: layerName, size: data.length, chunkSize }), 'INFO', 'TX');
 
     for (let i = 0; i < data.length; i += chunkSize) {
         const chunk = data.slice(i, i + chunkSize);
@@ -595,16 +848,16 @@ async function sendImageData(data, type, btn) {
                 noReplyCount = interleavedCount;
             }
         } catch (e) {
-            addLog(`数据块写入中断: ${e.message}`, 'ERROR', 'TX');
+            addLog(t('chunkWriteInterrupted', { message: e.message }), 'ERROR', 'TX');
             throw e;
         }
 
         if (chunkIdx % 20 === 0 || i + chunkSize >= data.length) {
             const percent = Math.min(100, Math.floor(((i + chunk.length) / data.length) * 100));
-            btn.innerText = `${type === 'bw' ? '黑白' : '红色'}数据 ${percent}%`;
+            btn.innerText = `${layerName}${t('dataProgress')} ${percent}%`;
         }
 
         chunkIdx++;
     }
-    addLog(`${type === 'bw' ? '黑白' : '红色'}层发送完成，共 ${totalChunks} 包`, 'OK', 'TX');
+    addLog(t('layerSendDone', { layer: layerName, totalChunks }), 'OK', 'TX');
 }
